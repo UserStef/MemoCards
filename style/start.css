@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css?family=Alegreya|Ubuntu|Satisfy&display=swap');
+:root {
+    --main-bg: hsla(0, 0%, 97%, 100%);
+    --main-clr: hsla(210, 0%, 7%, 89%);
+
+    --titleBG: hsla(210, 89%, 12%, 89%);
+    --header-bg: hsla(210, 89%, 12%, 89%);
+    
+    /* my defaults. */
+    --clr: var(--main-clr);
+    --bg: var(--main-bg);
+
+    /* Layout Control */
+    --header-h: 40px;
+    --content-h: calc(100vh - var(--header-h));
+
+    /* Layout Control */
+    --header-height: 48px;
+    --header-height: 61px;
+    --main-margin: calc(5vh);
+    --footer-height: 36px;
+    --main-top: calc(var(--header-height) + (var(--main-margin) / 2));
+    --main-offset: calc(var(--header-height) + var(--main-margin) + var(--footer-height));
+    --main-height: calc(100vh - var(--main-offset));
+
+    --main-bg: hsla(210, 0%, 5%, 100%);
+    --main-clr: hsla(0, 0%, 89%, 100%);
+
+    --w-scrollbar: 10px;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding: 1rem;
+}
+body {
+    background-color: var(--main-bg);
+    color: var(--main-clr);
+    font-family: 'Ubuntu', sans-serif;
+    margin: 0;
+}
+a:link { color: white; text-decoration: none;}
+a:hover { text-decoration: underline; }
+a:visited { color: white; }
+
+
+header {
+    width: 100%;
+    display: flex;
+    box-shadow: 0px 4px 4px #0009;
+    /* position: fixed;
+    top: 0; left: 0; */
+    /* background-color: var(--main-bg); */
+}
+.title {
+    font-size: 24px;
+    font-weight: 600;
+    padding-left: 12px;
+    width: max-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+header > .title {
+    width: max-content;
+    /* min-width: 189px; */
+    padding-left: 12px;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: min(9.5vw, 29px);
+    font-size: 2.5rem;
+    font-weight: normal;
+    color: var(--main-clr);
+
+    transition: padding 300ms ease-in-out;
+}
+header > h1.title {margin: 0;}
+
+main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+main {
+    position: relative;
+    min-height: 10vmin;
+    border-radius: 5px;
+    width: 95vw;
+    margin: 3vmin auto;
+
+    flex-direction: column;
+    justify-content: flex-start;
+    /* overflow: scroll; */
+}
+
+
+footer {
+    min-height: 36px;
+    box-sizing: border-box;
+    padding: .5rem;
+    color: hsla(210, 5%, 29%, 89%);
+    user-select: none;
+}
+footer .my-name {
+    position: fixed;
+    bottom: .5rem;
+    left: 1rem;
+    user-select: none;
+    color: hsla(210, 5%, 29%, 89%);
+    bottom: 0px;
+    left: 0px;
+    padding: 9px;
+}
+
+.hidden{
+    display: none!important; 
+    user-select: none;
+}

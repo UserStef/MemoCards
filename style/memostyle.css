@@ -36,10 +36,15 @@ main > * {
 .deck-list a:nth-child(2) .deck {--card-bg: repeating-linear-gradient(135deg, var(--card-color-1) 0px, var(--card-color-1) 20px, var(--card-color-2) 20px, var(--card-color-2) 40px);}
 .deck-list a:nth-child(3) .deck {--card-bg: repeating-conic-gradient(var(--card-color-1) 0deg 45deg,var(--card-color-2) 45deg 90deg) top left / 3rem 3rem;}
 .deck-list a:nth-child(4) .deck {--card-bg: repeating-conic-gradient(from 180deg, var(--card-color-1) 0deg 90deg, #0000 90deg 360deg) 12px 16px / 2.6rem 3rem, repeating-conic-gradient(var(--card-color-1) 0deg 90deg, var(--card-color-2) 90deg 360deg) top left / 2.6rem 3rem;}
+.deck-list a:nth-child(5) .deck {--card-bg: repeating-conic-gradient(from 135deg,var(--card-color-1) 0deg 90deg,#0000 90deg 360deg) 20px 0px / 2.6rem 3rem,repeating-conic-gradient(from -45deg,var(--card-color-1) 0deg 90deg, var(--card-color-2) 90deg 360deg) top left / 2.6rem 3rem;}
 .deck {
     --hue: 210;
     --card-color-1: hsla(var(--hue), 80%, 25%, 1);
     --card-color-2: hsla(var(--hue), 80%, 15%, 1);
+    --sat: 80%;
+    --lum: 25%; --lum2: calc(var(--lum) - 10%);
+    --card-color-1: hsla(var(--hue), var(--sat), var(--lum), 1);
+    --card-color-2: hsla(var(--hue), var(--sat), var(--lum2), 1);
     position: relative;
     height: 240px; width: 120px;
     height: 15rem; width: 9rem;

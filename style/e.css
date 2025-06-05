@@ -1,0 +1,48 @@
+
+:root {
+    --clr-4: #39f; --clr-4-mid: #369;
+}
+.btn {
+    box-sizing: border-box;
+    display: flex; align-items: center; justify-content: center;
+    min-height: 28px;
+    min-width: 50px;
+    padding: .25rem .75rem;
+    border-radius: .25rem;
+    cursor: pointer;
+    text-shadow: 1px 1px 1px #222;
+    color: #eee;
+    border: 0px;
+    border: 0px;
+    margin: .5rem auto;
+    background-color: var(--clr-4-mid);
+    transition: background-color 200ms ease-in-out;
+}
+.btn:hover {
+    background-color: var(--clr-4);
+}
+
+.btn-redo {background-color: var(--clr-1-mid);}
+.btn-redo:hover {background-color: var(--clr-1);}
+
+
+/* - Code Style - */
+code {
+    /* min-width: 500px; */
+    background-color: #1E1E1E;
+    background-color: #181818;
+    text-align: left;
+    padding: 4px 8px;
+    font-size: 14px;
+    color: #eee;
+    box-sizing: border-box;
+    width: 100%;
+}
+code > p {margin: .25rem 0;}
+.css-property {color: var(--css-property);}
+.css-number {color: var(--css-number);}
+.css-color {color: var(--css-color);}
+.css-function {color: var(--css-function);}
+.css-parenthesis {color: var(--css-parenthesis);}
+.css-comment {color: var(--css-comment);}
+

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Deck | MemoCards</title>
+    <link rel="icon" href="https://raw.githubusercontent.com/UserStef/MemoCards/master/res/MC.png">
+    <link rel="stylesheet" href="../../style/start.css">
+    <link rel="stylesheet" href="../../style/colors.css">
+    <link rel="stylesheet" href="../../style/e.css">
+    <link rel="stylesheet" href="../../style/memostyle.css">
+    <style>
+        :root {
+            /* --hue-math: 210;
+            --hue-english: 0;
+            --hue-css: 150;
+            --hue-programming: 270;
+            --hue: var(--hue-math);
+            --card-color-1: hsla(var(--hue), 80%, 25%, 1);
+            --card-color-2: hsla(var(--hue), 80%, 15%, 1); */
+            
+            --card-color-1: hsla(0, 80%, 25%, 1);
+            --card-color-2: hsla(0, 80%, 15%, 1);
+            --card-bg-02: repeating-linear-gradient(135deg, var(--card-color-1) 0px, var(--card-color-1) 20px, var(--card-color-2) 20px, var(--card-color-2) 40px);
+        }
+        .card::before {
+            background: var(--card-bg-02);
+        }
+
+    </style>
+    <link rel="stylesheet" href="../../style/settings.css">
+    <style>
+        .options {
+            flex-direction: column;
+            outline: 1px solid;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: auto;
+        }
+        .toggleCheckboxLabel {
+            padding: 0 1rem 0 0;
+            margin: .5rem;
+            margin-right: 2.25rem;
+        }
+        #toggleCard-id,
+        #toggleCard-qp,
+        #toggleCard-flipped {display: none;}
+        #toggleCard-id:checked ~ .options .toggleCheckboxLabel[for="toggleCard-id"],
+        #toggleCard-qp:checked ~ .options .toggleCheckboxLabel[for="toggleCard-qp"],
+        #toggleCard-flipped:checked ~ .options .toggleCheckboxLabel[for="toggleCard-flipped"] {
+            color: var(--bwe);
+            --clr-outline: var(--bwc);
+            --bgc-before: #063;
+            --bgc-after: #0c6;
+            --ttx-after: 1rem;
+        }
+        #toggleCard-flipped:checked ~ main .card {transform: perspective(var(--p)) rotate3d(0,0,0,0deg);}
+        #toggleCard-qp:checked ~ main .card-q {outline: 2px solid #93f; outline-offset: -2px;}
+        #toggleCard-qp:checked ~ main .card-p {outline: 2px solid #3f9; outline-offset: -2px;}
+        #toggleCard-id:checked ~ main .card::after {opacity: 1;}
+        
+        #toggleCard-flipped:checked ~ main .card.selected {transform: perspective(var(--p)) rotate3d(0,0,0,180deg);}
+        #toggleCard-flipped:checked ~ main .card.wrong-card {
+            transform: perspective(var(--p)) rotate3d(0,0,0,180deg);
+            animation: nodding-flipped 800ms ease-in both;
+        }
+    </style>
+</head>
+<body>
+    <header><div class="title">MemoCards</div></header>
+    <input type="checkbox" name="toggle" id="toggleCard-flipped">
+    <input type="checkbox" name="toggle" id="toggleCard-qp">
+    <input type="checkbox" name="toggle" id="toggleCard-id">
+
+    <main>
+        <div id="board" class="board"></div>
+    </main>
+
+    <div class="options">
+        <label for="toggleCard-flipped" class="toggleCheckboxLabel" data-toggle="style">Flip</label>
+        <!-- <label for="toggleCard-qp" class="toggleCheckboxLabel" data-toggle="style">Type</label> -->
+        <button class="btn btn-sort" onclick="sortCards()">sort</button>
+        <button class="btn btn-redo" onclick="restart()">redo</button>
+    </div>
+
+    <footer>
+        <div class="my-name">
+            <a href="#">Back To Top</a>
+            © 2025 | by Stéfano De La Torre 
+        </div>
+    </footer>
+<script>
+
+var cardAid = "";
+var cardBid = "";
+var secondClick = false;
+var cardCount = 16;
+
+function Match(aid,bid){
+    let cardA = document.getElementById(aid);
+    let cardB = document.getElementById(bid);
+    cardA.classList.add("gold-spin");
+    cardB.classList.add("gold-spin");
+    setTimeout(() => {
+        cardA.classList.add("a0");
+        cardB.classList.add("a0");
+    }, 2000);
+}
+function NotAMatch(aid,bid){
+    let cardA = document.getElementById(aid);
+    let cardB = document.getElementById(bid);
+    cardA.classList.toggle("selected");
+    cardB.classList.toggle("selected");
+    cardA.classList.add("wrong-card");
+    cardB.classList.add("wrong-card");
+    setTimeout(() => {
+        cardA.classList.toggle("wrong-card");
+        cardB.classList.toggle("wrong-card");
+    }, 1000);
+}
+function ClickCard(cid){
+    // console.log(`ClickCard event: ${cid}`);
+    let clickid = cid;
+    let clickedElement = document.getElementById(clickid);
+    if(clickid != cardAid){
+        if(secondClick){
+            cardBid = clickid;
+            let aid = document.getElementById(cardAid).dataset.pairid;
+            let bid = document.getElementById(cardBid).dataset.pairid;
+            if(aid == bid) {
+            cardCount -= 2;
+            Match(cardAid,cardBid);
+            if(cardCount == 0) {EndGame();}
+            } else {
+            NotAMatch(cardAid,cardBid);
+            }
+        } else {
+            cardAid = clickid;
+        }
+        // secondClick = secondClick ? false : true;
+    } else {
+        cardAid = "";
+    }
+    clickedElement.classList.toggle("selected");
+    secondClick = secondClick ? false : true;
+}
+function EndGame(){
+    console.log("🎊you won!🎉 🎆 🎇");
+    let board = document.getElementById('board');
+    setTimeout(() => {
+        board.style = "transform: perspective(1000px) rotate3d(0,1,0,180deg);";
+    }, 2000);
+    //display victory animation.
+    //display score.
+    //update player score and resources.
+}
+
+let datalists = {
+    "colors1": [`black`, `silver`, `gray`, `white`, `maroon`, `red`, `purple`, `fuchsia`, `green`, `lime`, `olive`, `yellow`, `navy`, `blue`, `teal`, `aqua`], 
+}
+const opps = ["+", "-", "*", "/", "%", ">>", "<<", "==", ">", "<"];
+let cards = {
+    "add": [],
+    "opp": [],
+    "math": [],
+    "english": [
+        {"pid": `0`, "q": `think`, "p": `piensa`},
+        {"pid": `1`, "q": `play`, "p": `juega`},
+        {"pid": `2`, "q": `travel`, "p": `viaja`},
+        {"pid": `3`, "q": `blue`, "p": `azul`},
+        {"pid": `4`, "q": `book`, "p": `libro`},
+        {"pid": `5`, "q": `tomato`, "p": `tomate`},
+        {"pid": `6`, "q": `Moon`, "p": `Luna`},
+        {"pid": `7`, "q": `card`, "p": `carta`},
+    ],
+    "template": [
+        // {"pid": `0`, "q": `9 + 2`, "p": `11`},
+    ],
+}
+
+function rint(r){
+return Math.floor(Math.random() * r);
+}
+function rint1(r){
+return Math.floor(Math.random() * r) + 1;
+}
+function AddCard(){
+    let a = Math.floor(Math.random() * 10);
+    let b = Math.floor(Math.random() * 10);
+    let c = a + b;
+    return {"q": `${a} + ${b}`, "p": `${c}`};
+}
+function MakeAddPairs(amount = 1){
+    for (let i = 0; i < amount; i++) {
+        cards["add"].push(AddCard());
+    }
+}
+const math_op = [`+`, `-`, `*`, `/`];
+function MathCard(op, n){
+    // let mop = math_op[rint(math_op.length)];
+    let a = rint1(n);
+    let b = rint1(n);
+    let c = eval(`${a} ${op} ${b}`);
+
+    return {"q": `${a} ${op} ${b}`, "p": `${c}`};
+}
+function MakeMathPairs(amount = 1){
+    for (let i = 0; i < amount; i++) {
+        cards["math"].push(MathCard());
+    }
+}
+
+function OpCard(){
+    let op = opps[rint(opps.length)];
+    let a = rint1(10);
+    let b = rint1(10);
+    let c = eval(`${a} ${op} ${b}`);
+
+    return {"q": `${a} ? ${b} = ${c}`, "p": `${op}`};
+}
+function MakeOppPairs(amount = 1){
+    for (let i = 0; i < amount; i++) {
+        cards["opp"].push(OpCard());    
+    }
+}
+
+function DisplayNCards(list, n){
+    let display = document.getElementById('board');
+    let keys = Object.keys(list);
+    for (let i = 0; i < n; i++) {
+        const ri = keys.splice(Math.floor(Math.random()*keys.length),1)[0];
+        const pair = list[ri];
+        let q = pair.q;
+        let p = pair.p;
+
+        let qcard = document.createElement("div");
+        qcard.classList.add("card");
+        qcard.classList.add("card-q");
+        qcard.dataset.pairid = p;
+        qcard.dataset.listid = ri;
+        qcard.id = `q${i}`;
+        // qcard.innerText = q;
+        qcard.innerHTML = q;
+        let pcard = document.createElement("div");
+        pcard.classList.add("card");
+        pcard.classList.add("card-p");
+        pcard.dataset.pairid = p;
+        pcard.dataset.listid = ri;
+        pcard.id = `p${i}`;
+        // pcard.innerText = p;
+        pcard.innerHTML = p;
+        
+        qcard.addEventListener("click", (ev) => {
+            console.log(`you clicked q${ev.target.dataset.listid}`);
+            console.log(ev.target.classList);
+            // ev.target.classList.add("selected");
+            ClickCard(ev.target.id);
+        });
+        pcard.addEventListener("click", (ev) => {
+            console.log(`you clicked q${ev.target.dataset.listid}`);
+            console.log(ev.target.classList);
+            // ev.target.classList.add("selected");
+            ClickCard(ev.target.id);
+        });
+        
+        display.appendChild(qcard);
+        display.appendChild(pcard);
+    }
+}
+function DisplayNCodeCards(list, n){
+    /* p variable is in code. */
+    let display = document.getElementById('board');
+    let keys = Object.keys(list);
+    for (let i = 0; i < n; i++) {
+        const ri = keys.splice(Math.floor(Math.random()*keys.length),1)[0];
+        const pair = list[ri];
+        let q = pair.q;
+        let p = pair.p;
+
+        let qcard = document.createElement("div");
+        qcard.classList.add("card");
+        qcard.classList.add("card-q");
+        qcard.dataset.pairid = pair.pid;
+        qcard.dataset.listid = ri;
+        qcard.id = `q${i}`;
+        // qcard.innerText = q;
+        qcard.innerHTML = q;
+        let pcard = document.createElement("div");
+        pcard.classList.add("card");
+        pcard.classList.add("card-p");
+        pcard.dataset.pairid = pair.pid;
+        pcard.dataset.listid = ri;
+        pcard.id = `p${i}`;
+        // pcard.innerText = p;
+        pcard.innerHTML = `<code>${p}</code>`;
+        
+        qcard.addEventListener("click", (ev) => {
+            // console.log(`you clicked q${ev.target.dataset.listid}`);
+            console.log(ev.target.classList);
+            ClickCard(ev.target.id);
+        });
+        pcard.addEventListener("click", (ev) => {
+            // console.log(`you clicked q${ev.target.dataset.listid}`);
+            console.log(ev.target.classList);
+            ClickCard(ev.target.id);
+        });
+        
+        display.appendChild(qcard);
+        display.appendChild(pcard);
+    }
+}
+
+function sortCards(){
+    let board = document.getElementById('board');
+    let cards = document.querySelectorAll(".card");
+    let len = cards.length;
+    for (let i = 0; i < len; i++) {
+        let ri = Math.floor(Math.random() * len);
+        const e = cards[ri];
+        board.appendChild(e);
+    }
+}
+
+function DeckStart(deckType){
+    settings["deck-size"] = settings["n-of-pairs"] * 2;
+    cardCount = settings["n-of-pairs"] * 2;
+    switch (deckType) {
+        case "add": 
+            settings["deck"] = "add";
+            cards["add"] = [];
+            MakeAddPairs(settings["n-of-pairs"]);
+            // DisplayCards(cards["add"]);
+            break;
+        case "opp": 
+            settings["deck"] = "opp";
+            cards["opp"] = [];
+            MakeOppPairs(settings["n-of-pairs"]);
+            // DisplayCards(cards["add"]);
+            break;
+        default:
+            settings["deck"] = deckType;
+            break;
+    }
+    DisplayNCards(cards[settings["deck"]], settings["n-of-pairs"]);
+    // DisplayNCodeCards(cards[settings["deck"]], settings["n-of-pairs"]);
+    sortCards();
+}
+
+function restart(){
+    secondClick = false;
+    let board = document.getElementById('board');
+    board.innerHTML = "";
+
+    DeckStart(settings["deck"]);
+
+    setTimeout(() => {
+        board.style = "transform: perspective(1000px) rotate3d(0,1,0,0deg);";
+    }, 200);
+}
+/*
+css--border-radius
+css--background-color
+css--border-style
+*/
+var settings = {
+    // "deck": "css--border-style",
+    "deck": "english",
+    // "deck": "css--background-color",
+    // "deck": "opp",
+    "n-of-pairs": 8,
+    "deck-size": 16,
+}
+
+window.addEventListener('load', (ev) => {
+    console.log(`Welcome!`);
+    // updateSettings();
+    // start();
+    // update();
+    // MakeAddPairs(8);
+    // MakeAddPairs(24);
+    // DisplayCards(cards["add"]);
+    // DisplayNCards(cards[settings["deck"]], settings["n-of-pairs"]);
+    // sortCards();
+    DeckStart(settings["deck"]);
+        
+});
+
+</script>
+</body>
+</html>

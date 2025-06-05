@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Deck | MemoCards</title>
+    <link rel="icon" href="https://raw.githubusercontent.com/UserStef/MemoCards/master/res/MC.png">
+    <link rel="stylesheet" href="../../style/start.css">
+    <link rel="stylesheet" href="../../style/colors.css">
+    <link rel="stylesheet" href="../../style/e.css">
+    <link rel="stylesheet" href="../../style/memostyle.css">
+    <style>
+        :root {
+            /* --hue-math: 210;
+            --hue-english: 0;
+            --hue-css: 150;
+            --hue-programming: 270;
+            --hue: var(--hue-math);
+            --card-color-1: hsla(var(--hue), 80%, 25%, 1);
+            --card-color-2: hsla(var(--hue), 80%, 15%, 1); */
+            
+            --card-color-1: hsla(150, 80%, 25%, 1);
+            --card-color-2: hsla(150, 80%, 15%, 1);
+            --card-bg-02: repeating-conic-gradient(var(--card-color-1) 0deg 45deg,var(--card-color-2) 45deg 90deg) top left / 3rem 3rem;
+        }
+        .card::before {
+            background: var(--card-bg-02);
+        }
+    </style>
+    <link rel="stylesheet" href="../../style/settings.css">
+    <style>
+        .options {
+            flex-direction: column;
+            outline: 1px solid;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: auto;
+        }
+        .toggleCheckboxLabel {
+            padding: 0 1rem 0 0;
+            margin: .5rem;
+            margin-right: 2.25rem;
+        }
+        #toggleCard-id,
+        #toggleCard-qp,
+        #toggleCard-flipped {display: none;}
+        #toggleCard-id:checked ~ .options .toggleCheckboxLabel[for="toggleCard-id"],
+        #toggleCard-qp:checked ~ .options .toggleCheckboxLabel[for="toggleCard-qp"],
+        #toggleCard-flipped:checked ~ .options .toggleCheckboxLabel[for="toggleCard-flipped"] {
+            color: var(--bwe);
+            --clr-outline: var(--bwc);
+            --bgc-before: #063;
+            --bgc-after: #0c6;
+            --ttx-after: 1rem;
+        }
+        #toggleCard-flipped:checked ~ main .card {transform: perspective(var(--p)) rotate3d(0,0,0,0deg);}
+        #toggleCard-qp:checked ~ main .card-q {outline: 2px solid #93f; outline-offset: -2px;}
+        #toggleCard-qp:checked ~ main .card-p {outline: 2px solid #3f9; outline-offset: -2px;}
+        #toggleCard-id:checked ~ main .card::after {opacity: 1;}
+        
+        #toggleCard-flipped:checked ~ main .card.selected {transform: perspective(var(--p)) rotate3d(0,0,0,180deg);}
+        #toggleCard-flipped:checked ~ main .card.wrong-card {
+            transform: perspective(var(--p)) rotate3d(0,0,0,180deg);
+            animation: nodding-flipped 800ms ease-in both;
+        }
+    </style>
+    
+</head>
+<body>
+    <header><div class="title">MemoCards</div></header>
+    <input type="checkbox" name="toggle" id="toggleCard-flipped">
+    <input type="checkbox" name="toggle" id="toggleCard-qp">
+    <input type="checkbox" name="toggle" id="toggleCard-id">
+
+    <main>
+        <div id="board" class="board"></div>
+    </main>
+
+    <div class="options">
+        <label for="toggleCard-flipped" class="toggleCheckboxLabel" data-toggle="style">Flip</label>
+        <!-- <label for="toggleCard-qp" class="toggleCheckboxLabel" data-toggle="style">Type</label> -->
+        <!-- <label for="toggleCard-id" class="toggleCheckboxLabel" data-toggle="style">ID</label> -->
+        <button class="btn btn-sort" onclick="sortCards()">sort</button>
+        <button class="btn btn-redo" onclick="restart()">redo</button>
+    </div>
+
+    <footer>
+        <div class="my-name">
+            <a href="#">Back To Top</a>
+            © 2025 | by Stéfano De La Torre 
+        </div>
+    </footer>
+<script>
+
+var cardAid = "";
+var cardBid = "";
+var secondClick = false;
+var cardCount = 16;
+
+function Match(aid,bid){
+    let cardA = document.getElementById(aid);
+    let cardB = document.getElementById(bid);
+    cardA.classList.add("gold-spin");
+    cardB.classList.add("gold-spin");
+    setTimeout(() => {
+        cardA.classList.add("a0");
+        cardB.classList.add("a0");
+    }, 2000);
+}
+function NotAMatch(aid,bid){
+    let cardA = document.getElementById(aid);
+    let cardB = document.getElementById(bid);
+    cardA.classList.toggle("selected");
+    cardB.classList.toggle("selected");
+    cardA.classList.add("wrong-card");
+    cardB.classList.add("wrong-card");
+    setTimeout(() => {
+        cardA.classList.toggle("wrong-card");
+        cardB.classList.toggle("wrong-card");
+    }, 1000);
+}
+function ClickCard1(cid){
+    // console.log(`ClickCard event: ${cid}`);
+    let clickid = cid;
+    if(clickid != cardAid){
+        if(secondClick){
+            cardBid = clickid;
+            let aid = document.getElementById(cardAid).dataset.pairid;
+            let bid = document.getElementById(cardBid).dataset.pairid;
+            if(aid == bid) {
+            cardCount -= 2;
+            Match(cardAid,cardBid);
+            if(cardCount == 0) {EndGame();}
+            } else {
+            NotAMatch(cardAid,cardBid);
+            }
+        } else {
+            cardAid = clickid;
+        }
+        secondClick = secondClick ? false : true;
+    }
+}
+function ClickCard(cid){
+    // console.log(`ClickCard event: ${cid}`);
+    let clickid = cid;
+    let clickedElement = document.getElementById(clickid);
+    if(clickid != cardAid){
+        if(secondClick){
+            cardBid = clickid;
+            let aid = document.getElementById(cardAid).dataset.pairid;
+            let bid = document.getElementById(cardBid).dataset.pairid;
+            if(aid == bid) {
+            cardCount -= 2;
+            Match(cardAid,cardBid);
+            if(cardCount == 0) {EndGame();}
+            } else {
+            NotAMatch(cardAid,cardBid);
+            }
+        } else {
+            cardAid = clickid;
+        }
+        // secondClick = secondClick ? false : true;
+    } else {
+        cardAid = "";
+    }
+    clickedElement.classList.toggle("selected");
+    secondClick = secondClick ? false : true;
+}
+function EndGame(){
+    console.log("🎊you won!🎉 🎆 🎇");
+    let board = document.getElementById('board');
+    setTimeout(() => {
+        board.style = "transform: perspective(1000px) rotate3d(0,1,0,180deg);";
+    }, 2000);
+//display victory animation.
+//display score.
+//update player score and resources.
+}
+
+let datalists = {
+    "colors1": [`black`, `silver`, `gray`, `white`, `maroon`, `red`, `purple`, `fuchsia`, `green`, `lime`, `olive`, `yellow`, `navy`, `blue`, `teal`, `aqua`], 
+}
+const opps = ["+", "-", "*", "/", "%", ">>", "<<", "==", ">", "<"];
+let cards = {
+    "add": [],
+    "opp": [],
+    "css--border-radius": [
+        {"pid": `20%`, "p": `<p><span class="css-property">border-radius</span>: <br><span class="css-number">20%</span>;</p>`, "q": `<div style="height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 20%;">S</div>`},
+        {"pid": `0%`, "p": `<p><span class="css-property">border-radius</span>: <br><span class="css-number">0%</span>;</p>`, "q": `<div style="height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 0%;">S</div>`},
+        {"pid": `50%`, "p": `<p><span class="css-property">border-radius</span>: <br><span class="css-number">50%</span>;</p>`, "q": `<div style="height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 50%;">S</div>`},
+        {"pid": `5% 5% 100%`, "p": `<p><span class="css-property">border-radius</span>: <br><span class="css-number">5% 5% 100%</span>;</p>`, "q": `<div style="height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 5% 5% 100%;">S</div>`},
+        
+        {"pid": `50% 0% 50% 0%`, "p": `<p><span class="css-property">border-radius</span>: <br><span class="css-number">50% 0% 50% 0%</span>;</p>`, "q": `<div style="height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 50% 0% 50% 0%;">S</div>`},
+        {"pid": `50% 50% 0% 0%`, "p": `<p><span class="css-property">border-radius</span>: <br><span class="css-number">50% 50% 0% 0%</span>;</p>`, "q": `<div style="height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 50% 50% 0% 0%;">S</div>`},
+        {"pid": `50% 0% 0% 0%`, "p": `<p><span class="css-property">border-radius</span>: <br><span class="css-number">50% 0% 0% 0%</span>;</p>`, "q": `<div style="height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 50% 0% 0% 0%;">S</div>`},
+        {"pid": `50% 0% 50% 50%`, "p": `<p><span class="css-property">border-radius</span>: <br><span class="css-number">50% 0% 50% 50%</span>;</p>`, "q": `<div style="height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 50% 0% 50% 50%;">S</div>`},
+        
+        {"pid": `100% 0% 50% 0%`, "p": `<p><span class="css-property">border-radius</span>: <br><span class="css-number">100% 0% 50% 0%</span>;</p>`, "q": `<div style="height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 100% 0% 50% 0%;">S</div>`},
+        {"pid": `100% 30%`, "p": `<p><span class="css-property">border-radius</span>: <br><span class="css-number">100% 30%</span>;</p>`, "q": `<div style="height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 100% 30%;">S</div>`},
+        {"pid": `0% 100% 0% 100%`, "p": `<p><span class="css-property">border-radius</span>: <br><span class="css-number">0% 100% 0% 100%</span>;</p>`, "q": `<div style="height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 0% 100% 0% 100%;">S</div>`},
+        {"pid": `100% 0% 0% 20%`, "p": `<p><span class="css-property">border-radius</span>: <br><span class="css-number">100% 0% 0% 20%</span>;</p>`, "q": `<div style="height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 100% 0% 0% 20%;">S</div>`},
+        {"pid": `10% 30% 70%`, "p": `<p><span class="css-property">border-radius</span>: <br><span class="css-number">10% 30% 70%</span>;</p>`, "q": `<div style="height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 10% 30% 70%;">S</div>`},
+        
+        {"pid": `50% / 20%`, "p": `<p><span class="css-property">border-radius</span>: <br><span class="css-number">50%</span> / <span class="css-number">20%</span>;</p>`, "q": `<div style="height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 50% / 20%;">S</div>`},
+        {"pid": `100% 0% 30% 0% / 30% 0% 100% 0%`, "p": `<p><span class="css-property">border-radius</span>: <br><span class="css-number">100% 0% 30% 0%</span> / <span class="css-number">30% 0% 100% 0%</span>;</p>`, "q": `<div style="height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 100% 0% 30% 0% / 30% 0% 100% 0%;">S</div>`},
+        {"pid": `50% 0% 10% 0% / 10% 0% 50% 0%`, "p": `<p><span class="css-property">border-radius</span>: <br><span class="css-number">50% 0% 10% 0%</span> / <span class="css-number">10% 0% 50% 0%</span>;</p>`, "q": `<div style="height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 50% 0% 10% 0% / 10% 0% 50% 0%;">S</div>`},
+        
+        {"pid": `50% 50% 30% 30% / 20% 20% 50% 50%`, "p": `<p><span class="css-property">border-radius</span>: <br><span class="css-number">50% 50% 30% 30%</span> / <span class="css-number">20% 20% 50% 50%</span>;</p>`, "q": `<div style="height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 50% 50% 30% 30% / 20% 20% 50% 50%;">S</div>`},
+        {"pid": `80% 30% / 30% 80%`, "p": `<p><span class="css-property">border-radius</span>: <br><span class="css-number">80% 30%</span> / <span class="css-number">30% 80%</span>;</p>`, "q": `<div style="height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 80% 30% / 30% 80%;">S</div>`},
+        {"pid": `100% 0% / 50% 0%`, "p": `<p><span class="css-property">border-radius</span>: <br><span class="css-number">100% 0%</span> / <span class="css-number">50% 0%</span>;</p>`, "q": `<div style="height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 100% 0% / 50% 0%;">S</div>`},
+        {"pid": `100% 30% 30% 100% / 30% 30% 100% 100%`, "p": `<p><span class="css-property">border-radius</span>: <br><span class="css-number">100% 30% 30% 100%</span> / <span class="css-number">30% 30% 100% 100%</span>;</p>`, "q": `<div style="height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 100% 30% 30% 100% / 30% 30% 100% 100%;">S</div>`},
+    ],
+    "css--background-color": [
+        {"p": `background: black`, "q": `<div style="background: black; color: #fff; text-shadow: 1px 1px 1px #111; height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; font-size: 20px; border-radius: 0%;">S</div>`},
+        {"p": `background: silver`, "q": `<div style="background: silver; color: #fff; text-shadow: 1px 1px 1px #111; height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; font-size: 20px; border-radius: 0%;">S</div>`},
+        {"p": `background: gray`, "q": `<div style="background: gray; color: #fff; text-shadow: 1px 1px 1px #111; height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; font-size: 20px; border-radius: 0%;">S</div>`},
+        {"p": `background: white`, "q": `<div style="background: white; color: #fff; text-shadow: 1px 1px 1px #111; height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; font-size: 20px; border-radius: 0%;">S</div>`},
+        {"p": `background: maroon`, "q": `<div style="background: maroon; color: #fff; text-shadow: 1px 1px 1px #111; height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; font-size: 20px; border-radius: 0%;">S</div>`},
+        {"p": `background: red`, "q": `<div style="background: red; color: #fff; text-shadow: 1px 1px 1px #111; height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; font-size: 20px; border-radius: 0%;">S</div>`},
+        {"p": `background: purple`, "q": `<div style="background: purple; color: #fff; text-shadow: 1px 1px 1px #111; height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; font-size: 20px; border-radius: 0%;">S</div>`},
+        {"p": `background: fuchsia`, "q": `<div style="background: fuchsia; color: #fff; text-shadow: 1px 1px 1px #111; height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; font-size: 20px; border-radius: 0%;">S</div>`},
+        {"p": `background: green`, "q": `<div style="background: green; color: #fff; text-shadow: 1px 1px 1px #111; height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; font-size: 20px; border-radius: 0%;">S</div>`},
+        {"p": `background: lime`, "q": `<div style="background: lime; color: #fff; text-shadow: 1px 1px 1px #111; height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; font-size: 20px; border-radius: 0%;">S</div>`},
+        {"p": `background: olive`, "q": `<div style="background: olive; color: #fff; text-shadow: 1px 1px 1px #111; height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; font-size: 20px; border-radius: 0%;">S</div>`},
+        {"p": `background: yellow`, "q": `<div style="background: yellow; color: #fff; text-shadow: 1px 1px 1px #111; height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; font-size: 20px; border-radius: 0%;">S</div>`},
+        {"p": `background: navy`, "q": `<div style="background: navy; color: #fff; text-shadow: 1px 1px 1px #111; height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; font-size: 20px; border-radius: 0%;">S</div>`},
+        {"p": `background: blue`, "q": `<div style="background: blue; color: #fff; text-shadow: 1px 1px 1px #111; height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; font-size: 20px; border-radius: 0%;">S</div>`},
+        {"p": `background: teal`, "q": `<div style="background: teal; color: #fff; text-shadow: 1px 1px 1px #111; height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; font-size: 20px; border-radius: 0%;">S</div>`},
+        {"p": `background: aqua`, "q": `<div style="background: aqua; color: #fff; text-shadow: 1px 1px 1px #111; height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; font-size: 20px; border-radius: 0%;">S</div>`},
+    ],
+    "css--border-style": [
+        // {"p": `border-style: hidden;`, "q": `<div style="border-style: hidden; border-width: 8px; border-color: black; box-sizing: border-box; height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 0px;">S</div>`},
+        {"p": `border-style: solid;`, "q": `<div style="border-style: solid; border-width: 8px; border-color: black; box-sizing: border-box; height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 0px;">S</div>`},
+        {"p": `border-style: double;`, "q": `<div style="border-style: double; border-width: 8px; border-color: black; box-sizing: border-box; height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 0px;">S</div>`},
+        {"p": `border-style: dashed;`, "q": `<div style="border-style: dashed; border-width: 8px; border-color: black; box-sizing: border-box; height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 0px;">S</div>`},
+        {"p": `border-style: dotted;`, "q": `<div style="border-style: dotted; border-width: 8px; border-color: black; box-sizing: border-box; height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 0px;">S</div>`},
+        
+        // {"p": `border-style: ridge;`, "q": `<div style="border-style: ridge; border-width: 8px; border-color: black; box-sizing: border-box; height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 0px;">S</div>`},
+        // {"p": `border-style: outset;`, "q": `<div style="border-style: outset; border-width: 8px; border-color: black; box-sizing: border-box; height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 0px;">S</div>`},
+        // {"p": `border-style: inset;`, "q": `<div style="border-style: inset; border-width: 8px; border-color: black; box-sizing: border-box; height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 0px;">S</div>`},
+        // {"p": `border-style: groove;`, "q": `<div style="border-style: groove; border-width: 8px; border-color: black; box-sizing: border-box; height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 0px;">S</div>`},
+        
+        {"p": `border-style: hidden double;`, "q": `<div style="border-style: hidden double; border-width: 8px; border-color: black; box-sizing: border-box; height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 8px;">S</div>`},
+        {"p": `border-style: solid hidden;`, "q": `<div style="border-style: solid hidden; border-width: 8px; border-color: black; box-sizing: border-box; height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 8px;">S</div>`},
+        {"p": `border-style: solid hidden double;`, "q": `<div style="border-style: solid hidden double; border-width: 8px; border-color: black; box-sizing: border-box; height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 16px;">S</div>`},
+        {"p": `border-style: ridge groove groove ridge;`, "q": `<div style="border-style: ridge groove groove ridge; border-width: 8px; border-color: black; box-sizing: border-box; height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 16px;">S</div>`},
+    ],
+    "css--border": [
+        {"p": `border: 4px 0px solid black;`, "q": `<div style="border: 4px 0px solid black; height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 16px;">S</div>`},
+        {"p": `border: 4px hidden double dashed black;`, "q": `<div style="border: 4px hidden double dashed black; height: 100px; width: 100px; display: flex; align-items: center; justify-content: center; background-color: #39f; color: #000; font-size: 20px; border-radius: 16px;">S</div>`},
+        
+    ],
+}
+
+function rint(r){
+return Math.floor(Math.random() * r);
+}
+function rint1(r){
+return Math.floor(Math.random() * r) + 1;
+}
+function AddCard(){
+let a = Math.floor(Math.random() * 10);
+let b = Math.floor(Math.random() * 10);
+let c = a + b;
+return {"q": `${a} + ${b}`, "p": `${c}`};
+}
+function MakeAddPairs(amount = 1){
+    for (let i = 0; i < amount; i++) {
+        cards["add"].push(AddCard());
+    }
+}
+function OpCard(){
+    let op = opps[rint(opps.length)];
+    let a = rint1(10);
+    let b = rint1(10);
+    let c = eval(`${a} ${op} ${b}`);
+
+    return {"q": `${a} ? ${b} = ${c}`, "p": `${op}`};
+}
+function MakeOppPairs(amount = 1){
+    for (let i = 0; i < amount; i++) {
+        cards["opp"].push(OpCard());    
+    }
+}
+
+function DisplayCards1(list){
+    let display = document.getElementById('board');
+    list.forEach(pair => {
+        let q = pair.q;
+        let p = pair.p;
+
+        let qcard = document.createElement("div");
+        qcard.classList.add("card");
+        qcard.dataset.pairid = p;
+        qcard.innerText = q;
+        let pcard = document.createElement("div");
+        pcard.classList.add("card");
+        pcard.dataset.pairid = p;
+        pcard.innerText = p;
+        
+        display.appendChild(qcard);
+        display.appendChild(pcard);
+    });
+}
+function DisplayCards(list){
+    let display = document.getElementById('board');
+    for (let i = 0; i < list.length; i++) {
+        const pair = list[i];
+        let q = pair.q;
+        let p = pair.p;
+
+        let qcard = document.createElement("div");
+        qcard.classList.add("card");
+        qcard.classList.add("card-q");
+        qcard.dataset.pairid = p;
+        qcard.dataset.listid = i;
+        qcard.id = `q${i}`;
+        qcard.innerText = q;
+        let pcard = document.createElement("div");
+        pcard.classList.add("card");
+        pcard.classList.add("card-p");
+        pcard.dataset.pairid = p;
+        pcard.dataset.listid = i;
+        pcard.id = `p${i}`;
+        pcard.innerText = p;
+        
+        qcard.addEventListener("click", (ev) => {
+            // console.log(`you clicked q${ev.target.dataset.listid}`);
+            ev.target.classList.add("selected");
+            // ev.target.classList.add("wrong");
+            // ClickCard(ev);
+            ClickCard(ev.target.id);
+            // ev.target.classList.add("gold-spin");
+            // setTimeout(() => {
+                //     ev.target.classList.add("a0");
+                // }, 2000);
+        });
+        pcard.addEventListener("click", (ev) => {
+            // console.log(`you clicked p${ev.target.dataset.listid}`);
+            ev.target.classList.add("selected");
+            // ClickCard(ev);
+            ClickCard(ev.target.id);
+            // ev.target.classList.add("gold-spin");
+            // setTimeout(() => {
+            //     ev.target.classList.add("a0");
+            // }, 2000);
+        });
+        
+        display.appendChild(qcard);
+        display.appendChild(pcard);
+    }
+}
+
+function DisplayNCards(list, n){
+    let display = document.getElementById('board');
+    let keys = Object.keys(list);
+    for (let i = 0; i < n; i++) {
+        const ri = keys.splice(Math.floor(Math.random()*keys.length),1)[0];
+        const pair = list[ri];
+        let q = pair.q;
+        let p = pair.p;
+
+        let qcard = document.createElement("div");
+        qcard.classList.add("card");
+        qcard.classList.add("card-q");
+        qcard.dataset.pairid = p;
+        qcard.dataset.listid = ri;
+        qcard.id = `q${i}`;
+        // qcard.innerText = q;
+        qcard.innerHTML = q;
+        let pcard = document.createElement("div");
+        pcard.classList.add("card");
+        pcard.classList.add("card-p");
+        pcard.dataset.pairid = p;
+        pcard.dataset.listid = ri;
+        pcard.id = `p${i}`;
+        // pcard.innerText = p;
+        pcard.innerHTML = p;
+        
+        qcard.addEventListener("click", (ev) => {
+            console.log(`you clicked q${ev.target.dataset.listid}`);
+            console.log(ev.target.classList);
+            ev.target.classList.add("selected");
+            ClickCard(ev.target.id);
+        });
+        pcard.addEventListener("click", (ev) => {
+            console.log(`you clicked q${ev.target.dataset.listid}`);
+            console.log(ev.target.classList);
+            ev.target.classList.add("selected");
+            ClickCard(ev.target.id);
+        });
+        
+        display.appendChild(qcard);
+        display.appendChild(pcard);
+    }
+}
+function DisplayNCodeCards(list, n){
+    /* p variable is in code. */
+    let display = document.getElementById('board');
+    let keys = Object.keys(list);
+    for (let i = 0; i < n; i++) {
+        const ri = keys.splice(Math.floor(Math.random()*keys.length),1)[0];
+        const pair = list[ri];
+        let q = pair.q;
+        let p = pair.p;
+
+        let qcard = document.createElement("div");
+        qcard.classList.add("card");
+        qcard.classList.add("card-q");
+        qcard.dataset.pairid = pair.pid;
+        qcard.dataset.listid = ri;
+        qcard.id = `q${i}`;
+        // qcard.innerText = q;
+        qcard.innerHTML = q;
+        let pcard = document.createElement("div");
+        pcard.classList.add("card");
+        pcard.classList.add("card-p");
+        pcard.dataset.pairid = pair.pid;
+        pcard.dataset.listid = ri;
+        pcard.id = `p${i}`;
+        // pcard.innerText = p;
+        pcard.innerHTML = `<code>${p}</code>`;
+        
+        qcard.addEventListener("click", (ev) => {
+            // console.log(`you clicked q${ev.target.dataset.listid}`);
+            console.log(ev.target.classList);
+            // ev.target.classList.add("selected");
+            ClickCard(ev.target.id);
+        });
+        pcard.addEventListener("click", (ev) => {
+            // console.log(`you clicked q${ev.target.dataset.listid}`);
+            console.log(ev.target.classList);
+            // ev.target.classList.add("selected");
+            ClickCard(ev.target.id);
+        });
+        
+        display.appendChild(qcard);
+        display.appendChild(pcard);
+    }
+}
+
+function sortCards(){
+    let board = document.getElementById('board');
+    let cards = document.querySelectorAll(".card");
+    let len = cards.length;
+    for (let i = 0; i < len; i++) {
+        let ri = Math.floor(Math.random() * len);
+        const e = cards[ri];
+        board.appendChild(e);
+    }
+}
+
+function DeckStart(deckType){
+    settings["deck-size"] = settings["n-of-pairs"] * 2;
+    cardCount = settings["n-of-pairs"] * 2;
+    switch (deckType) {
+        case "add": 
+            settings["deck"] = "add";
+            cards["add"] = [];
+            MakeAddPairs(settings["n-of-pairs"]);
+            // DisplayCards(cards["add"]);
+            break;
+        case "opp": 
+            settings["deck"] = "opp";
+            cards["opp"] = [];
+            MakeOppPairs(settings["n-of-pairs"]);
+            // DisplayCards(cards["add"]);
+            break;
+        default:
+            settings["deck"] = deckType;
+            break;
+    }
+    // DisplayNCards(cards[settings["deck"]], settings["n-of-pairs"]);
+    DisplayNCodeCards(cards[settings["deck"]], settings["n-of-pairs"]);
+    sortCards();
+}
+
+function restart(){
+    secondClick = false;
+    let board = document.getElementById('board');
+    board.innerHTML = "";
+
+    DeckStart(settings["deck"]);
+
+    // sortCards();
+    setTimeout(() => {
+        board.style = "transform: perspective(1000px) rotate3d(0,1,0,0deg);";
+    }, 200);
+}
+/*
+css--border-radius
+css--background-color
+css--border-style
+*/
+var settings = {
+    // "deck": "css--border-style",
+    // "deck": "css--background-color",
+    // "deck": "opp",
+    "deck": "css--border-radius",
+    // "n-of-pairs": 20,
+    // "deck-size": 40,
+    "n-of-pairs": 8,
+    "deck-size": 16,
+}
+
+window.addEventListener('load', (ev) => {
+    console.log(`Welcome!`);
+    // updateSettings();
+    // start();
+    // update();
+    // MakeAddPairs(8);
+    // MakeAddPairs(24);
+    // DisplayCards(cards["add"]);
+    // DisplayNCards(cards[settings["deck"]], settings["n-of-pairs"]);
+    // sortCards();
+    DeckStart(settings["deck"]);
+        
+});
+
+</script>
+</body>
+</html>

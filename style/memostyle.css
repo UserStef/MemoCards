@@ -1,0 +1,344 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Bungee&family=Carter+One&family=Fugaz+One&display=swap');
+:root {
+    --p: 1000px;
+    --gold-glow: #fc0;
+}
+.font-Carter_One {font-family: 'Carter One', cursive;}
+header .title {font-family: 'Carter One', cursive;}
+main > * {
+    box-sizing: border-box;
+    display: flex; align-items: center; justify-content: center;
+}
+.deck-list {
+    box-sizing: border-box;
+    min-height: 100px;
+    min-width: 100px;
+    padding: .5rem;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    flex-wrap: wrap;
+    /* display: grid;
+    grid-template-columns: repeat(4, 1fr); */
+    transform-style: preserve-3d;
+    transform: perspective(800px) rotate3d(1,0,0,10deg);
+    margin-top: 50px;
+    transition: transform 800ms ease-in-out;
+}
+.deck-list a {transform-style: preserve-3d;}
+
+:root {
+    --card-bg-01: repeating-conic-gradient(var(--card-color-1) 0deg 90deg,var(--card-color-2) 90deg 180deg) top left / 3rem 3rem;
+    --card-bg-02: repeating-linear-gradient(135deg, var(--card-color-1) 0px, var(--card-color-1) 20px, var(--card-color-2) 20px, var(--card-color-2) 40px);
+    --card-bg-03: repeating-conic-gradient(var(--card-color-1) 0deg 45deg,var(--card-color-2) 45deg 90deg) top left / 3rem 3rem;
+}
+.deck-list a:nth-child(1) .deck {--card-bg: repeating-conic-gradient(var(--card-color-1) 0deg 90deg,var(--card-color-2) 90deg 180deg) top left / 3rem 3rem;}
+.deck-list a:nth-child(2) .deck {--card-bg: repeating-linear-gradient(135deg, var(--card-color-1) 0px, var(--card-color-1) 20px, var(--card-color-2) 20px, var(--card-color-2) 40px);}
+.deck-list a:nth-child(3) .deck {--card-bg: repeating-conic-gradient(var(--card-color-1) 0deg 45deg,var(--card-color-2) 45deg 90deg) top left / 3rem 3rem;}
+.deck-list a:nth-child(4) .deck {--card-bg: repeating-conic-gradient(from 180deg, var(--card-color-1) 0deg 90deg, #0000 90deg 360deg) 12px 16px / 2.6rem 3rem, repeating-conic-gradient(var(--card-color-1) 0deg 90deg, var(--card-color-2) 90deg 360deg) top left / 2.6rem 3rem;}
+.deck {
+    --hue: 210;
+    --card-color-1: hsla(var(--hue), 80%, 25%, 1);
+    --card-color-2: hsla(var(--hue), 80%, 15%, 1);
+    position: relative;
+    height: 240px; width: 120px;
+    height: 15rem; width: 9rem;
+    background-color: #eee;
+    color: #eee;
+    text-shadow: 2px 2px 2px #333;
+    font-size: 20px;
+    box-shadow: inset 0px 0px 0px 8px #fa2;
+    background: var(--card-bg);
+    margin: 4px;
+    margin: 8px;
+    display: flex; align-items: center; justify-content: center;
+    transform-style: preserve-3d;
+    transition: transform 400ms ease-in-out;
+    cursor: pointer;
+    user-select: none;
+}
+
+[class|="side"] {
+    position: absolute;
+    display: flex; align-items: center; justify-content: center;
+    transform-style: preserve-3d;
+    border-radius: 0px;
+}
+.deck .side-top {
+    top: 0%; left: 0%;
+    height: 2rem; width: 9rem;
+    background-image: linear-gradient(180deg, #fa2, #d68400);
+    transform: translateZ(-2rem) rotate3d(1,0,0,90deg);
+    transform-origin: 50% 0%;
+    transition: transform 600ms ease-in-out;
+}
+.deck .side-top-lid {
+    top: 100%; left: 0%;
+    height: 1rem; width: 9rem;
+    background-image: linear-gradient(180deg, #d68400, hsl(37, 100%, 27%));
+    transform: rotate3d(1,0,0,-105deg);
+    transform-origin: 50% 0%;
+    transition: transform 300ms ease-in-out;
+    border-radius: 0 0 8px 8px;
+}
+.deck:hover .side-top {transform: translateZ(-2rem) rotate3d(1,0,0,180deg);}
+.deck:hover .side-top-lid {transform: rotate3d(1,0,0,-20deg);}
+.deck:hover .side-top {transition: transform 600ms ease-in-out;}
+.deck:hover .side-top-lid {transition: transform 300ms ease-in-out 300ms;}
+.deck .side-left {
+    top: 0%; left: 0%;
+    height: 15rem; width: 2rem;
+    background-image: linear-gradient(90deg, #fa2, #bd7400);
+    transform: rotate3d(0,1,0,90deg);
+    transform-origin: 0% 50%;
+}
+.deck .side-right {
+    top: 0%; left: 100%;
+    height: 15rem; width: 2rem;
+    background-image: linear-gradient(90deg, #fa2, #bd7400);
+    transform: rotate3d(0,1,0,90deg);
+    transform-origin: 0% 50%;
+}
+.deck .side-bottom {
+    top: 100%; left: 0%;
+    height: 2rem; width: 9rem;
+    background-image: linear-gradient(180deg, #fa2, #d68400);
+    transform: rotate3d(1,0,0,-90deg);
+    transform-origin: 50% 0%;
+}
+.deck .side-base {
+    top: 0%; left: 0%;
+    height: 15rem; width: 9rem;
+    background-image: linear-gradient(180deg, #fa2, #774a01);
+    transform: rotate3d(1,0,0,0deg) translateZ(-2rem);
+    transform-origin: 50% 50%;
+}
+
+.board {
+    box-sizing: border-box;
+    min-height: 100px;
+    min-width: 100px;
+    padding: .5rem;
+    border-radius: 12px;
+    outline: 1px dashed #fff;
+    display: flex; align-items: center; justify-content: center;
+    flex-wrap: wrap;
+    display: grid;
+    transform-style: preserve-3d;
+    grid-template-columns: repeat(4, 1fr);
+    transform: perspective(1000px) rotate3d(0,1,0,0deg);
+    transition: transform 800ms ease-in-out;
+}
+.board::after {
+    position: absolute;
+    content: "🎊You Won!🎉";
+    content: "🎊 ¡Ganaste! 🎉";
+    top: 50%; left: 50%;
+    height: 100%; width: 100%;
+    transform: translateX(-50%) translateY(-50%);
+    border-radius: 12px;
+    font-size: 24px;
+    background-color: #036;
+    background-image: 
+    conic-gradient(from 45deg, #06c 0deg 45deg, #0000 45deg),
+    conic-gradient(from 225deg, #06c 0deg 45deg, #0000 45deg);
+    background-size: 2rem 2rem;
+    background-position: 0rem 0rem, 1.25rem -1.25rem;
+    color: #eee;
+    outline: 1px solid #eee;
+    display: flex; align-items: center; justify-content: center;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+    transform: translateX(-50%) translateY(-50%) perspective(var(--p)) rotate3d(0,1,0,180deg);
+    transform: perspective(var(--p)) translateX(-50%) translateY(-50%) translatez(-1px) rotate3d(0,1,0,180deg);
+    animation: spir 1200ms linear infinite both;
+    animation-play-state: paused;
+}
+.board:hover::after {
+    animation-play-state: running;
+}
+@keyframes spir {
+    0% {background-position: 0rem 0rem;}
+    100% {background-position: 2rem -2rem, -2rem 2rem;}
+}
+.card {
+    position: relative;
+    height: 120px; width: 120px;
+    border-radius: 4px;
+    background-color: #eee;
+    color: #111;
+    margin: 4px;
+    margin: 8px;
+    display: flex; align-items: center; justify-content: center;
+    transform-style: preserve-3d;
+    transition: transform 400ms ease-in-out;
+    cursor: pointer;
+    user-select: none;
+}
+.card::before {
+    position: absolute;
+    content: "";
+    /* content: attr(data-listid); */
+    top: 50%; left: 50%;
+    height: 100%; width: 100%;
+    transform: translateX(-50%) translateY(-50%);
+    border-radius: 4px;
+    background-color: #036;
+    background: var(--card-bg2);
+    /* color: #eee; */
+    outline: 1px solid #eee;
+    display: flex; align-items: center; justify-content: center;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+    transform: translateX(-50%) translateY(-50%) perspective(var(--p)) rotate3d(0,1,0,180deg);
+    transform: perspective(var(--p)) translateX(-50%) translateY(-50%) translatez(-1px) rotate3d(0,1,0,180deg);
+}
+/* .card::after {
+    position: absolute;
+    content: "+";
+    content: attr(data-listid);
+    top: 0%; left: 0%;
+    height: 16px; width: 16px;
+    transform: translateX(-30%) translateY(-30%);
+    font-size: 12px;
+    border-radius: 50%;
+    background-color: #111;
+    color: #eee;
+    outline: 1px solid #eee;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+    backface-visibility: hidden;
+} */
+.card::after {
+    position: absolute;
+    content: "";
+    top: 50%; left: 50%;
+    height: 100%; width: 100%;
+    border-radius: 4px;
+    background-color: #0000;
+    color: #0000;
+    outline: 1px solid #0000;
+    display: flex; align-items: center; justify-content: center;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+    transform: perspective(var(--p)) translateX(-50%) translateY(-50%) translatez(1px);
+    opacity: 0;
+}
+
+.card {transform: perspective(var(--p)) rotate3d(0,1,0,180deg);}
+/* .card {transform: perspective(var(--p)) translateZ(0px) translate(0px, 0px) rotate3d(0,1,0,180deg);}
+.card:hover {transform: perspective(var(--p)) translatez(300px) translate(0px, -400px) rotate3d(0,1,0,1080deg);} */
+
+.card.selected {
+    box-shadow: 0px 0px 2px 2px #3cf;
+    transform: perspective(var(--p)) rotate3d(0,0,0,180deg);
+}
+.card.wrong-card {
+    box-shadow: 0px 0px 2px 2px #f33;
+    transform: perspective(var(--p)) rotate3d(0,0,0,180deg);
+    animation: nodding 800ms ease-in both;
+}
+
+@keyframes nodding-flipped {
+    0% {transform: perspective(var(--p)) translatez(0px) rotate3d(1,0,0,0deg) rotate3d(0,1,0,0deg);}
+    20% {transform: perspective(var(--p)) translatez(-50px) rotate3d(1,0,0,-10deg) rotate3d(0,1,0,0deg);}
+    30% {transform: perspective(var(--p)) translatez(-50px) rotate3d(1,0,0,-10deg) rotate3d(0,1,0,40deg);}
+    40% {transform: perspective(var(--p)) translatez(-50px) rotate3d(1,0,0,-10deg) rotate3d(0,1,0,0deg);}
+    50% {transform: perspective(var(--p)) translatez(-50px) rotate3d(1,0,0,-10deg) rotate3d(0,1,0,-40deg);}
+    60% {transform: perspective(var(--p)) translatez(-50px) rotate3d(1,0,0,-10deg) rotate3d(0,1,0,0deg);}
+    70% {transform: perspective(var(--p)) translatez(-50px) rotate3d(1,0,0,-10deg) rotate3d(0,1,0,40deg);}
+    80% {transform: perspective(var(--p)) translatez(-50px) rotate3d(1,0,0,-10deg) rotate3d(0,1,0,0deg);}
+    100% {transform: perspective(var(--p)) translatez(0px) rotate3d(1,0,0,0deg) rotate3d(0,1,0,0deg);}
+}
+@keyframes nodding {
+    0% {transform: perspective(var(--p)) translatez(0px) rotate3d(1,0,0,0deg) rotate3d(0,1,0,0deg);}
+    20% {transform: perspective(var(--p)) translatez(-50px) rotate3d(1,0,0,-10deg) rotate3d(0,1,0,0deg);}
+    30% {transform: perspective(var(--p)) translatez(-50px) rotate3d(1,0,0,-10deg) rotate3d(0,1,0,40deg);}
+    40% {transform: perspective(var(--p)) translatez(-50px) rotate3d(1,0,0,-10deg) rotate3d(0,1,0,0deg);}
+    50% {transform: perspective(var(--p)) translatez(-50px) rotate3d(1,0,0,-10deg) rotate3d(0,1,0,-40deg);}
+    60% {transform: perspective(var(--p)) translatez(-50px) rotate3d(1,0,0,-10deg) rotate3d(0,1,0,0deg);}
+    70% {transform: perspective(var(--p)) translatez(-50px) rotate3d(1,0,0,-10deg) rotate3d(0,1,0,40deg);}
+    80% {transform: perspective(var(--p)) translatez(-50px) rotate3d(1,0,0,-10deg) rotate3d(0,1,0,0deg);}
+    100% {transform: perspective(var(--p)) translatez(0px) rotate3d(1,0,0,0deg) rotate3d(0,1,0,180deg);}
+}
+
+
+.card.gold-spin {
+    box-shadow: 0px 0px 8px 4px #fc0;
+    animation: gspin2 1800ms linear both;
+}
+@keyframes gspin2 {
+    0% {box-shadow: 0px 0px 8px -4px #fc00;
+        transform: perspective(var(--p)) translatez(0px) rotate3d(0,1,0,0deg) rotate3d(0,0,1,0deg);}
+    30% {box-shadow: 0px 0px 8px 4px #fc0;
+        transform: perspective(var(--p)) translatez(150px) rotate3d(0,1,0,720deg) rotate3d(0,0,1,0deg);}
+    35% {transform: perspective(var(--p)) translatez(150px) rotate3d(0,1,0,720deg) rotate3d(0,0,1,10deg);}
+    40% {transform: perspective(var(--p)) translatez(150px) rotate3d(0,1,0,720deg) rotate3d(0,0,1,0deg);}
+    45% {transform: perspective(var(--p)) translatez(150px) rotate3d(0,1,0,720deg) rotate3d(0,0,1,-10deg);}
+    50% {transform: perspective(var(--p)) translatez(150px) rotate3d(0,1,0,720deg) rotate3d(0,0,1,0deg);}
+    55% {transform: perspective(var(--p)) translatez(150px) rotate3d(0,1,0,720deg) rotate3d(0,0,1,10deg);}
+    60% {transform: perspective(var(--p)) translatez(150px) rotate3d(0,1,0,720deg) rotate3d(0,0,1,0deg);}
+    65% {transform: perspective(var(--p)) translatez(150px) rotate3d(0,1,0,720deg) rotate3d(0,0,1,-10deg);}
+    70% {transform: perspective(var(--p)) translatez(150px) rotate3d(0,1,0,720deg) rotate3d(0,0,1,0deg);}
+    75% {transform: perspective(var(--p)) translatez(150px) rotate3d(0,1,0,720deg) rotate3d(0,0,1,10deg);}
+    80% {transform: perspective(var(--p)) translatez(150px) rotate3d(0,1,0,720deg) rotate3d(0,0,1,0deg);}
+    85% {transform: perspective(var(--p)) translatez(150px) rotate3d(0,1,0,720deg) rotate3d(0,0,1,-10deg);}
+    90% {transform: perspective(var(--p)) translatez(150px) rotate3d(0,1,0,720deg) rotate3d(0,0,1,0deg);}
+    100% {transform: perspective(var(--p)) translatez(150px) rotate3d(0,1,0,720deg) rotate3d(0,0,1,0deg);}
+}
+.card.gold-spin.a0 {
+    animation: leafout 1200ms linear both;
+}
+@keyframes leafout {
+    0% {transform: perspective(var(--p)) translatez(150px) translateY(0px) rotate3d(0,1,0,0deg);}
+    100% {transform: perspective(var(--p)) translatez(300px) translateY(-800px) rotate3d(0,1,0,540deg);}
+}
+
+
+/* - Toggle buttons - */
+.options {
+    flex-direction: column;
+    outline: 1px solid;
+    align-items: flex-end;
+    justify-content: space-around;
+    height: auto;
+}
+.toggleCheckboxLabel {
+    padding: 0 1rem 0 0;
+    margin: .5rem;
+    margin-right: 2.25rem;
+}
+#toggleCard-id,
+#toggleCard-qp,
+#toggleCard-flipped {display: none;}
+#toggleCard-id:checked ~ .options .toggleCheckboxLabel[for="toggleCard-id"],
+#toggleCard-qp:checked ~ .options .toggleCheckboxLabel[for="toggleCard-qp"],
+#toggleCard-flipped:checked ~ .options .toggleCheckboxLabel[for="toggleCard-flipped"] {
+    color: var(--bwe);
+    --clr-outline: var(--bwc);
+    --bgc-before: #063;
+    --bgc-after: #0c6;
+    --ttx-after: 1rem;
+}
+#toggleCard-flipped:checked ~ main .card {transform: perspective(var(--p)) rotate3d(0,0,0,0deg);}
+/* #toggleCard-qp:checked ~ main .card-q {box-shadow: inset 0px 0px 2px 4px #93f;}
+#toggleCard-qp:checked ~ main .card-p {box-shadow: inset 0px 0px 2px 4px #3f9;} */
+#toggleCard-qp:checked ~ main .card-q {outline: 2px solid #93f; outline-offset: -2px;}
+#toggleCard-qp:checked ~ main .card-p {outline: 2px solid #3f9; outline-offset: -2px;}
+/* #toggleCard-id:checked ~ main .card {display: flex;} */
+#toggleCard-id:checked ~ main .card::after {opacity: 1;}
+/* #toggleCard-id:checked ~ main .card::after {display: flex;} */
+
+#toggleCard-flipped:checked ~ main .card.selected {transform: perspective(var(--p)) rotate3d(0,0,0,180deg);}
+#toggleCard-flipped:checked ~ main .card.wrong-card {
+    transform: perspective(var(--p)) rotate3d(0,0,0,180deg);
+    animation: nodding-flipped 800ms ease-in both;
+}
+
+
+/* CSS Deck - styles */
+.box {
+    height: 100px; width: 100px; 
+    display: flex; align-items: center; justify-content: center; 
+    background-color: #39f;
+}

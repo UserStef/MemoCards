@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discrete Math Deck | MemoCards</title>
+    <link rel="icon" href="https://raw.githubusercontent.com/UserStef/MemoCards/master/res/MC.png">
+    <link rel="stylesheet" href="../../style/start.css">
+    <link rel="stylesheet" href="../../style/colors.css">
+    <link rel="stylesheet" href="../../style/e.css">
+    <link rel="stylesheet" href="../../style/memostyle.css">
+    <style>
+        :root {
+            /* --hue-math: 210;
+            --hue-english: 0;
+            --hue-css: 150;
+            --hue-programming: 270;
+            --hue: var(--hue-math);
+            --card-color-1: hsla(var(--hue), 80%, 25%, 1);
+            --card-color-2: hsla(var(--hue), 80%, 15%, 1); */
+            
+            --card-color-1: hsla(130, 80%, 25%, 1);
+            --card-color-2: hsla(130, 80%, 15%, 1);
+            --card-bg-02: repeating-conic-gradient(from 135deg,var(--card-color-1) 0deg 90deg,#0000 90deg 360deg) 20px 0px / 2.6rem 3rem,repeating-conic-gradient(from -45deg,var(--card-color-1) 0deg 90deg, var(--card-color-2) 90deg 360deg) top left / 2.6rem 3rem;
+
+        }
+        .card {width: 150px;}
+        .card::before {
+            background: var(--card-bg-02);
+        }
+        code {
+            text-align: center;
+            min-height: 25px;
+        }
+    </style>
+    <link rel="stylesheet" href="../../style/settings.css">
+    <style>
+        .options {
+            flex-direction: column;
+            outline: 1px solid;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: auto;
+        }
+        .toggleCheckboxLabel {
+            padding: 0 1rem 0 0;
+            margin: .5rem;
+            margin-right: 2.25rem;
+        }
+        #toggleCard-id,
+        #toggleCard-qp,
+        #toggleCard-flipped {display: none;}
+        #toggleCard-id:checked ~ .options .toggleCheckboxLabel[for="toggleCard-id"],
+        #toggleCard-qp:checked ~ .options .toggleCheckboxLabel[for="toggleCard-qp"],
+        #toggleCard-flipped:checked ~ .options .toggleCheckboxLabel[for="toggleCard-flipped"] {
+            color: var(--bwe);
+            --clr-outline: var(--bwc);
+            --bgc-before: #063;
+            --bgc-after: #0c6;
+            --ttx-after: 1rem;
+        }
+        #toggleCard-flipped:checked ~ main .card {transform: perspective(var(--p)) rotate3d(0,0,0,0deg);}
+        #toggleCard-qp:checked ~ main .card-q {outline: 2px solid #93f; outline-offset: -2px;}
+        #toggleCard-qp:checked ~ main .card-p {outline: 2px solid #3f9; outline-offset: -2px;}
+        #toggleCard-id:checked ~ main .card::after {opacity: 1;}
+        
+        #toggleCard-flipped:checked ~ main .card.selected {transform: perspective(var(--p)) rotate3d(0,0,0,180deg);}
+        #toggleCard-flipped:checked ~ main .card.wrong-card {
+            transform: perspective(var(--p)) rotate3d(0,0,0,180deg);
+            animation: nodding-flipped 800ms ease-in both;
+        }
+    </style>
+    
+</head>
+<body>
+    <header><div class="title">MemoCards</div></header>
+    <input type="checkbox" name="toggle" id="toggleCard-flipped">
+    <input type="checkbox" name="toggle" id="toggleCard-qp">
+    <input type="checkbox" name="toggle" id="toggleCard-id">
+
+    <main>
+        <div id="board" class="board"></div>
+    </main>
+
+    <div class="options">
+        <label for="toggleCard-flipped" class="toggleCheckboxLabel" data-toggle="style">Flip</label>
+        <!-- <label for="toggleCard-qp" class="toggleCheckboxLabel" data-toggle="style">Type</label> -->
+        <!-- <label for="toggleCard-id" class="toggleCheckboxLabel" data-toggle="style">ID</label> -->
+        <button class="btn btn-sort" onclick="sortCards()">sort</button>
+        <button class="btn btn-redo" onclick="restart()">redo</button>
+    </div>
+
+    <footer>
+        <div class="my-name">
+            <a href="#">Back To Top</a>
+            © 2025 | by Stéfano De La Torre 
+        </div>
+    </footer>
+<script>
+
+var cardAid = "";
+var cardBid = "";
+var secondClick = false;
+var cardCount = 16;
+
+function Match(aid,bid){
+    let cardA = document.getElementById(aid);
+    let cardB = document.getElementById(bid);
+    cardA.classList.add("gold-spin");
+    cardB.classList.add("gold-spin");
+    setTimeout(() => {
+        cardA.classList.add("a0");
+        cardB.classList.add("a0");
+    }, 2000);
+}
+function NotAMatch(aid,bid){
+    let cardA = document.getElementById(aid);
+    let cardB = document.getElementById(bid);
+    cardA.classList.toggle("selected");
+    cardB.classList.toggle("selected");
+    cardA.classList.add("wrong-card");
+    cardB.classList.add("wrong-card");
+    setTimeout(() => {
+        cardA.classList.toggle("wrong-card");
+        cardB.classList.toggle("wrong-card");
+    }, 1000);
+}
+function ClickCard1(cid){
+    // console.log(`ClickCard event: ${cid}`);
+    let clickid = cid;
+    if(clickid != cardAid){
+        if(secondClick){
+            cardBid = clickid;
+            let aid = document.getElementById(cardAid).dataset.pairid;
+            let bid = document.getElementById(cardBid).dataset.pairid;
+            if(aid == bid) {
+            cardCount -= 2;
+            Match(cardAid,cardBid);
+            if(cardCount == 0) {EndGame();}
+            } else {
+            NotAMatch(cardAid,cardBid);
+            }
+        } else {
+            cardAid = clickid;
+        }
+        secondClick = secondClick ? false : true;
+    }
+}
+function ClickCard(cid){
+    // console.log(`ClickCard event: ${cid}`);
+    let clickid = cid;
+    let clickedElement = document.getElementById(clickid);
+    if(clickid != cardAid){
+        if(secondClick){
+            cardBid = clickid;
+            let aid = document.getElementById(cardAid).dataset.pairid;
+            let bid = document.getElementById(cardBid).dataset.pairid;
+            if(aid == bid) {
+            cardCount -= 2;
+            Match(cardAid,cardBid);
+            if(cardCount == 0) {EndGame();}
+            } else {
+            NotAMatch(cardAid,cardBid);
+            }
+        } else {
+            cardAid = clickid;
+        }
+        // secondClick = secondClick ? false : true;
+    } else {
+        cardAid = "";
+    }
+    clickedElement.classList.toggle("selected");
+    secondClick = secondClick ? false : true;
+}
+function EndGame(){
+    console.log("🎊you won!🎉 🎆 🎇");
+    let board = document.getElementById('board');
+    setTimeout(() => {
+        board.style = "transform: perspective(1000px) rotate3d(0,1,0,180deg);";
+    }, 2000);
+//display victory animation.
+//display score.
+//update player score and resources.
+}
+
+let datalists = {
+    "colors1": [`black`, `silver`, `gray`, `white`, `maroon`, `red`, `purple`, `fuchsia`, `green`, `lime`, `olive`, `yellow`, `navy`, `blue`, `teal`, `aqua`], 
+}
+const opps = ["+", "-", "*", "/", "%", ">>", "<<", "==", ">", "<"];
+let cards = {
+    "add": [],
+    "opp": [],
+    "code--variables": [
+        {"pid": `string`, "p": `"hello world!"`, "q": `string`},
+        {"pid": `string`, "p": `"23"`, "q": `string`},
+        {"pid": `string`, "p": `"2" + 3`, "q": `string`},
+        {"pid": `null`, "p": ``, "q": `null`},
+        {"pid": `int`, "p": `2 + 3`, "q": `int`},
+        {"pid": `int`, "p": `2 * "2"`, "q": `int`},
+        {"pid": `float`, "p": `1 / 2`, "q": `float`},
+        {"pid": `int`, "p": `1 / 0`, "q": `int`},
+        {"pid": `bool`, "p": `true`, "q": `bool`},
+        {"pid": `bool`, "p": `false`, "q": `bool`},
+        {"pid": `bool`, "p": `3 == 2`, "q": `bool`},
+        {"pid": `bool`, "p": `8 > 5`, "q": `bool`},
+    ],
+    "code--typeof": [
+        {"pid": ``, "p": `"hello world!"`, "q": `string`},
+        {"pid": ``, "p": `"23"`, "q": `string`},
+        {"pid": ``, "p": `"2" + 3`, "q": `string`},
+        {"pid": ``, "p": `2 + 3`, "q": `number`},
+        {"pid": ``, "p": `2 * "2"`, "q": `number`},
+        {"pid": ``, "p": `1 / 2`, "q": `number`},
+        {"pid": ``, "p": `1 / 0`, "q": `number`},
+        {"pid": ``, "p": `NaN`, "q": `number`},
+        {"pid": ``, "p": `true`, "q": `boolean`},
+        {"pid": ``, "p": `false`, "q": `boolean`},
+        {"pid": ``, "p": `3 == 2`, "q": `boolean`},
+        {"pid": ``, "p": `8 > 5`, "q": `boolean`},
+        {"pid": ``, "p": `[]`, "q": `object`},
+        {"pid": ``, "p": `null`, "q": `object`},
+        {"pid": ``, "p": `{}`, "q": `object`},
+        // {"pid": ``, "p": ``, "q": ``},
+        {"pid": ``, "p": `[][5]`, "q": `undefined`},
+    ],
+    "code--logic": [
+        {"pid": ``, "p": `true == true`, "q": `true`},
+        {"pid": ``, "p": `2 == "2"`, "q": `true`},
+        {"pid": ``, "p": `!true`, "q": `false`},
+        {"pid": ``, "p": `true != false`, "q": `true`},
+        {"pid": ``, "p": `2 === "2"`, "q": `false`},
+        {"pid": ``, "p": `true`, "q": `true`},
+        {"pid": ``, "p": `"2" + 3 == 5`, "q": `false`},
+        {"pid": ``, "p": `2 * "2" == 4`, "q": `true`},
+    ],
+    "code--discrete-math": [
+        {"pid": `Commutative Laws`, "p": `p & q = q & p`, "q": `Commutative Laws`},
+        {"pid": `Commutative Laws`, "p": `p | q = q | p`, "q": `Commutative Laws`},
+        {"pid": `Associative Laws`, "p": `(p & q) & r = p & (q & r)`, "q": `Associative Laws`},
+        {"pid": `Distributive Laws`, "p": `(p & q) | (p & r) = p & (q | r)`, "q": `Distributive Laws`},
+
+        {"pid": `Negation Laws`, "p": `p & t = p`, "q": `Negation Laws`},
+        {"pid": `Negation Laws`, "p": `p | c = p`, "q": `Negation Laws`},
+        {"pid": `Double Negative Laws`, "p": `!(!p) = p`, "q": `Double Negative Laws`},
+        {"pid": `Idempotent Laws`, "p": `p & p = p`, "q": `Idempotent Laws`},
+
+        {"pid": `Idempotent Laws`, "p": `p | p = p`, "q": `Idempotent Laws`},
+        {"pid": `De Morgan's Laws`, "p": `!(p | q) = !p & !q`, "q": `De Morgan's Laws`},
+        {"pid": `Absorption Laws`, "p": `p & (p | q) = p`, "q": `Absorption Laws`},
+    ],
+    "code--discrete-math2": [
+        {"pid": ``, "p": `p & q`, "q": `q & p`},
+        {"pid": ``, "p": `(p & q) & r`, "q": `p & (q & r)`},
+        {"pid": ``, "p": `(p & q) | (p & r)`, "q": `p & (q | r)`},
+        {"pid": ``, "p": `!(p | q)`, "q": `!p & !q`},
+        {"pid": ``, "p": `p & (p | q)`, "q": `p`},
+        {"pid": ``, "p": ``, "q": ``},
+        {"pid": ``, "p": ``, "q": ``},
+        {"pid": ``, "p": ``, "q": ``},
+    ],
+    "code--Math": [
+        {"pid": ``, "p": ``, "q": ``},
+    ],
+}
+
+function rint(r){
+return Math.floor(Math.random() * r);
+}
+function rint1(r){
+return Math.floor(Math.random() * r) + 1;
+}
+function AddCard(){
+let a = Math.floor(Math.random() * 10);
+let b = Math.floor(Math.random() * 10);
+let c = a + b;
+return {"q": `${a} + ${b}`, "p": `${c}`};
+}
+function MakeAddPairs(amount = 1){
+    for (let i = 0; i < amount; i++) {
+        cards["add"].push(AddCard());
+    }
+}
+function OpCard(){
+    let op = opps[rint(opps.length)];
+    let a = rint1(10);
+    let b = rint1(10);
+    let c = eval(`${a} ${op} ${b}`);
+
+    return {"q": `${a} ? ${b} = ${c}`, "p": `${op}`};
+}
+function MakeOppPairs(amount = 1){
+    for (let i = 0; i < amount; i++) {
+        cards["opp"].push(OpCard());    
+    }
+}
+
+function DisplayCards1(list){
+    let display = document.getElementById('board');
+    list.forEach(pair => {
+        let q = pair.q;
+        let p = pair.p;
+
+        let qcard = document.createElement("div");
+        qcard.classList.add("card");
+        qcard.dataset.pairid = p;
+        qcard.innerText = q;
+        let pcard = document.createElement("div");
+        pcard.classList.add("card");
+        pcard.dataset.pairid = p;
+        pcard.innerText = p;
+        
+        display.appendChild(qcard);
+        display.appendChild(pcard);
+    });
+}
+function DisplayCards(list){
+    let display = document.getElementById('board');
+    for (let i = 0; i < list.length; i++) {
+        const pair = list[i];
+        let q = pair.q;
+        let p = pair.p;
+
+        let qcard = document.createElement("div");
+        qcard.classList.add("card");
+        qcard.classList.add("card-q");
+        qcard.dataset.pairid = p;
+        qcard.dataset.listid = i;
+        qcard.id = `q${i}`;
+        qcard.innerText = q;
+        let pcard = document.createElement("div");
+        pcard.classList.add("card");
+        pcard.classList.add("card-p");
+        pcard.dataset.pairid = p;
+        pcard.dataset.listid = i;
+        pcard.id = `p${i}`;
+        pcard.innerText = p;
+        
+        qcard.addEventListener("click", (ev) => {
+            // console.log(`you clicked q${ev.target.dataset.listid}`);
+            ev.target.classList.add("selected");
+            // ev.target.classList.add("wrong");
+            // ClickCard(ev);
+            ClickCard(ev.target.id);
+            // ev.target.classList.add("gold-spin");
+            // setTimeout(() => {
+                //     ev.target.classList.add("a0");
+                // }, 2000);
+        });
+        pcard.addEventListener("click", (ev) => {
+            // console.log(`you clicked p${ev.target.dataset.listid}`);
+            ev.target.classList.add("selected");
+            // ClickCard(ev);
+            ClickCard(ev.target.id);
+            // ev.target.classList.add("gold-spin");
+            // setTimeout(() => {
+            //     ev.target.classList.add("a0");
+            // }, 2000);
+        });
+        
+        display.appendChild(qcard);
+        display.appendChild(pcard);
+    }
+}
+
+function DisplayNCards(list, n){
+    let display = document.getElementById('board');
+    let keys = Object.keys(list);
+    for (let i = 0; i < n; i++) {
+        const ri = keys.splice(Math.floor(Math.random()*keys.length),1)[0];
+        const pair = list[ri];
+        let q = pair.q;
+        let p = pair.p;
+
+        let qcard = document.createElement("div");
+        qcard.classList.add("card");
+        qcard.classList.add("card-q");
+        qcard.dataset.pairid = p;
+        qcard.dataset.listid = ri;
+        qcard.id = `q${i}`;
+        // qcard.innerText = q;
+        qcard.innerHTML = q;
+        let pcard = document.createElement("div");
+        pcard.classList.add("card");
+        pcard.classList.add("card-p");
+        pcard.dataset.pairid = p;
+        pcard.dataset.listid = ri;
+        pcard.id = `p${i}`;
+        // pcard.innerText = p;
+        pcard.innerHTML = p;
+        
+        qcard.addEventListener("click", (ev) => {
+            console.log(`you clicked q${ev.target.dataset.listid}`);
+            console.log(ev.target.classList);
+            ev.target.classList.add("selected");
+            ClickCard(ev.target.id);
+        });
+        pcard.addEventListener("click", (ev) => {
+            console.log(`you clicked q${ev.target.dataset.listid}`);
+            console.log(ev.target.classList);
+            ev.target.classList.add("selected");
+            ClickCard(ev.target.id);
+        });
+        
+        display.appendChild(qcard);
+        display.appendChild(pcard);
+    }
+}
+function DisplayNCodeCards(list, n){
+    /* p variable is in code. */
+    let display = document.getElementById('board');
+    let keys = Object.keys(list);
+    for (let i = 0; i < n; i++) {
+        const ri = keys.splice(Math.floor(Math.random()*keys.length),1)[0];
+        const pair = list[ri];
+        let q = pair.q;
+        let p = pair.p;
+
+        let qcard = document.createElement("div");
+        qcard.classList.add("card");
+        qcard.classList.add("card-q");
+        qcard.dataset.pairid = pair.pid;
+        qcard.dataset.listid = ri;
+        qcard.id = `q${i}`;
+        // qcard.innerText = q;
+        qcard.innerHTML = q;
+        let pcard = document.createElement("div");
+        pcard.classList.add("card");
+        pcard.classList.add("card-p");
+        pcard.dataset.pairid = pair.pid;
+        pcard.dataset.listid = ri;
+        pcard.id = `p${i}`;
+        // pcard.innerText = p;
+        pcard.innerHTML = `<code>${p}</code>`;
+        
+        qcard.addEventListener("click", (ev) => {
+            // console.log(`you clicked q${ev.target.dataset.listid}`);
+            console.log(ev.target.classList);
+            // ev.target.classList.add("selected");
+            ClickCard(ev.target.id);
+        });
+        pcard.addEventListener("click", (ev) => {
+            // console.log(`you clicked q${ev.target.dataset.listid}`);
+            console.log(ev.target.classList);
+            // ev.target.classList.add("selected");
+            ClickCard(ev.target.id);
+        });
+        
+        display.appendChild(qcard);
+        display.appendChild(pcard);
+    }
+}
+
+function sortCards(){
+    let board = document.getElementById('board');
+    let cards = document.querySelectorAll(".card");
+    let len = cards.length;
+    for (let i = 0; i < len; i++) {
+        let ri = Math.floor(Math.random() * len);
+        const e = cards[ri];
+        board.appendChild(e);
+    }
+}
+
+function DeckStart(deckType){
+    settings["deck-size"] = settings["n-of-pairs"] * 2;
+    cardCount = settings["n-of-pairs"] * 2;
+    switch (deckType) {
+        case "add": 
+            settings["deck"] = "add";
+            cards["add"] = [];
+            MakeAddPairs(settings["n-of-pairs"]);
+            // DisplayCards(cards["add"]);
+            break;
+        case "opp": 
+            settings["deck"] = "opp";
+            cards["opp"] = [];
+            MakeOppPairs(settings["n-of-pairs"]);
+            // DisplayCards(cards["add"]);
+            break;
+        default:
+            settings["deck"] = deckType;
+            break;
+    }
+    // DisplayNCards(cards[settings["deck"]], settings["n-of-pairs"]);
+    DisplayNCodeCards(cards[settings["deck"]], settings["n-of-pairs"]);
+    sortCards();
+}
+
+function restart(){
+    secondClick = false;
+    let board = document.getElementById('board');
+    board.innerHTML = "";
+
+    DeckStart(settings["deck"]);
+
+    // sortCards();
+    setTimeout(() => {
+        board.style = "transform: perspective(1000px) rotate3d(0,1,0,0deg);";
+    }, 200);
+}
+/*
+css--border-radius
+css--background-color
+css--border-style
+*/
+var settings = {
+    // "deck": "code--variables",
+    // "deck": "code--typeof",
+    // "deck": "code--logic",
+    "deck": "code--discrete-math",
+    // "n-of-pairs": 20,
+    // "deck-size": 40,
+    "n-of-pairs": 8,
+    "deck-size": 16,
+}
+
+window.addEventListener('load', (ev) => {
+    console.log(`Welcome!`);
+    // updateSettings();
+    // start();
+    // update();
+    // MakeAddPairs(8);
+    // MakeAddPairs(24);
+    // DisplayCards(cards["add"]);
+    // DisplayNCards(cards[settings["deck"]], settings["n-of-pairs"]);
+    // sortCards();
+    DeckStart(settings["deck"]);
+        
+});
+
+</script>
+</body>
+</html>

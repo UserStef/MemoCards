@@ -27,45 +27,9 @@
         .card::before {
             background: var(--card-bg-02);
         }
-
     </style>
     <link rel="stylesheet" href="../../style/settings.css">
-    <style>
-        .options {
-            flex-direction: column;
-            outline: 1px solid;
-            align-items: flex-end;
-            justify-content: space-around;
-            height: auto;
-        }
-        .toggleCheckboxLabel {
-            padding: 0 1rem 0 0;
-            margin: .5rem;
-            margin-right: 2.25rem;
-        }
-        #toggleCard-id,
-        #toggleCard-qp,
-        #toggleCard-flipped {display: none;}
-        #toggleCard-id:checked ~ .options .toggleCheckboxLabel[for="toggleCard-id"],
-        #toggleCard-qp:checked ~ .options .toggleCheckboxLabel[for="toggleCard-qp"],
-        #toggleCard-flipped:checked ~ .options .toggleCheckboxLabel[for="toggleCard-flipped"] {
-            color: var(--bwe);
-            --clr-outline: var(--bwc);
-            --bgc-before: #063;
-            --bgc-after: #0c6;
-            --ttx-after: 1rem;
-        }
-        #toggleCard-flipped:checked ~ main .card {transform: perspective(var(--p)) rotate3d(0,0,0,0deg);}
-        #toggleCard-qp:checked ~ main .card-q {outline: 2px solid #93f; outline-offset: -2px;}
-        #toggleCard-qp:checked ~ main .card-p {outline: 2px solid #3f9; outline-offset: -2px;}
-        #toggleCard-id:checked ~ main .card::after {opacity: 1;}
-        
-        #toggleCard-flipped:checked ~ main .card.selected {transform: perspective(var(--p)) rotate3d(0,0,0,180deg);}
-        #toggleCard-flipped:checked ~ main .card.wrong-card {
-            transform: perspective(var(--p)) rotate3d(0,0,0,180deg);
-            animation: nodding-flipped 800ms ease-in both;
-        }
-    </style>
+    <link rel="stylesheet" href="../../style/settings2.css">
 </head>
 <body>
     <header><div class="title">MemoCards</div></header>

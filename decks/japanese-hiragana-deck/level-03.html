@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Japanese Hiragana Deck | MemoCards</title>
+    <title>Japanese Hiragana Deck 03 | MemoCards</title>
     <link rel="icon" href="https://raw.githubusercontent.com/UserStef/MemoCards/master/res/MC.png">
-    <link rel="stylesheet" href="../../style/start.css">
+    <!-- <link rel="stylesheet" href="../../style/start.css">
     <link rel="stylesheet" href="../../style/colors.css">
     <link rel="stylesheet" href="../../style/e.css">
-    <link rel="stylesheet" href="../../style/memostyle.css">
+    <link rel="stylesheet" href="../../style/memostyle.css"> -->
+    <link rel="stylesheet" href="style.css">
+    
     <style>
         :root {
             /* --hue-math: 210;
@@ -23,20 +25,55 @@
             --card-color-1: hsla(0, 80%, 25%, 1);
             --card-color-2: hsla(0, 80%, 15%, 1);
             --card-bg-02: radial-gradient(circle at 50% 50%, #700 50%, #0000 50%) 10px 10px / 100px 100px no-repeat, linear-gradient(135deg, #fff5 50%, #0002 50%), #aaa;
+            --card-bg-02: radial-gradient(circle at 50% 50%, #700 50%, #0000 50%) 5px 5px / 60px 60px no-repeat, linear-gradient(135deg, #fff5 50%, #0002 50%), #aaa;
+        }
+        main {margin-top: 8vmin;}
+        .board {
+            grid-template-columns: repeat(5, 1fr);
+        }
+        .card {
+            height: 100px; width: 100px;
+            height: 60px; width: 60px;
+            height: 70px; width: 70px;
+            margin: 4px;
         }
         .card::before {
             background: var(--card-bg-02);
         }
-        .card-p {font-size: 32px;}
-        .card-q {font-size: 32px;}
+        /* .card-p {font-size: 32px;}
+        .card-q {font-size: 32px;} */
 
-        /* .board::after {content: "🎊 ¡Ganaste! ㊗ 🎉"; } */
+        .card::after {
+            content: attr(data-listid);
+            align-items: flex-start;
+            justify-content: flex-start;
+            color: #f00;
+            opacity: 0;
+        }
+
+        .board::after {content: "🎊 ¡Ganaste! ㊗ 🎉"; }
+
+        /* #CheckboxID-02, */
+        #toggleCard-help {display: none;}
+        /* #CheckboxID-02:checked ~ .options .toggleCheckboxLabel[for="CheckboxID-02"], */
+        #toggleCard-help:checked ~ .options .toggleCheckboxLabel[for="toggleCard-help"] {
+            color: var(--bwe);
+            --clr-outline: var(--bwc);
+            --bgc-before: #063;
+            --bgc-after: #0c6;
+            --ttx-after: 1rem;
+        }
+        #toggleCard-help:checked ~ main .card::after {
+            opacity: .2;
+        }
     </style>
-    <link rel="stylesheet" href="../../style/settings.css">
-    <link rel="stylesheet" href="../../style/settings2.css">
+    <!-- <link rel="stylesheet" href="../../style/settings.css">
+    <link rel="stylesheet" href="../../style/settings2.css"> -->
+    <link rel="stylesheet" href="set.css">
 </head>
 <body>
     <header><div class="title">MemoCards</div></header>
+    <input type="checkbox" name="toggle" id="toggleCard-help">
     <input type="checkbox" name="toggle" id="toggleCard-flipped">
     <input type="checkbox" name="toggle" id="toggleCard-qp">
     <input type="checkbox" name="toggle" id="toggleCard-id">
@@ -47,6 +84,7 @@
 
     <div class="options">
         <label for="toggleCard-flipped" class="toggleCheckboxLabel" data-toggle="style">Flip</label>
+        <label for="toggleCard-help" class="toggleCheckboxLabel" data-toggle="style">help</label>
         <!-- <label for="toggleCard-qp" class="toggleCheckboxLabel" data-toggle="style">Type</label> -->
         <button class="btn btn-sort" onclick="sortCards()">sort</button>
         <button class="btn btn-redo" onclick="restart()">redo</button>
@@ -143,43 +181,125 @@ let cards = {
         {"pid": `7`, "q": `card`, "p": `carta`},
     ],
     "hiragana": [
-        {"pid": `0`, "q": `a`, "p": `あ`},
-        {"pid": `1`, "q": `i`, "p": `い`},
-        {"pid": `2`, "q": `e`, "p": `え`},
-        {"pid": `3`, "q": `o`, "p": `お`},
-        {"pid": `4`, "q": `ba`, "p": `ば`},
-        {"pid": `5`, "q": `be`, "p": `べ`},
-        {"pid": `6`, "q": `cha`, "p": `ちゃ`},
-        {"pid": `7`, "q": `chi`, "p": `ち`},
-        {"pid": `8`, "q": `da`, "p": `だ`},
-        {"pid": `9`, "q": `de`, "p": `で`},
-        {"pid": `10`, "q": `do`, "p": `ど`},
+        {"pid": `0`, "q": `n`, "p": `ん`},
+        {"pid": `1`, "q": `a`, "p": `あ`},
+        {"pid": `2`, "q": `ka`, "p": `か`},
+        {"pid": `3`, "q": `sa`, "p": `さ`},
+        {"pid": `4`, "q": `ta`, "p": `た`},
+        {"pid": `5`, "q": `na`, "p": `な`},
+        {"pid": `6`, "q": `ha`, "p": `は`},
+        {"pid": `7`, "q": `ma`, "p": `ま`},
+        {"pid": `8`, "q": `ya`, "p": `や`},
+        {"pid": `9`, "q": `ra`, "p": `ら`},
+        {"pid": `10`, "q": `wa`, "p": `わ`},
         {"pid": `11`, "q": `ga`, "p": `が`},
-        {"pid": `12`, "q": `go`, "p": `ご`},
-        {"pid": `13`, "q": `ha`, "p": `は`},
-        {"pid": `14`, "q": `hi`, "p": `ひ`},
-        {"pid": `15`, "q": `ka`, "p": `か`},
-        {"pid": `16`, "q": `ko`, "p": `こ`},
-        {"pid": `17`, "q": `kko`, "p": `つこ`},
-        {"pid": `18`, "q": `ku`, "p": `く`},
-        {"pid": `19`, "q": `ma`, "p": `ま`},
-        {"pid": `20`, "q": `mi`, "p": `み`},
-        {"pid": `21`, "q": `n`, "p": `ん`},
-        {"pid": `22`, "q": `na`, "p": `な`},
-        {"pid": `23`, "q": `ni`, "p": `に`},
-        {"pid": `24`, "q": `re`, "p": `れ`},
-        {"pid": `25`, "q": `sa`, "p": `さ`},
-        {"pid": `26`, "q": `se`, "p": `せ`},
-        {"pid": `27`, "q": `su`, "p": `す`},
-        {"pid": `28`, "q": `sha`, "p": `しゃ`},
-        {"pid": `29`, "q": `shi`, "p": `し`},
-        {"pid": `30`, "q": `ta`, "p": `た`},
-        {"pid": `31`, "q": `te`, "p": `て`},
-        {"pid": `32`, "q": `to`, "p": `と`},
-        {"pid": `33`, "q": `wa`, "p": `は`},
-        {"pid": `34`, "q": `ya`, "p": `や`},
-        {"pid": `35`, "q": `zu`, "p": `ず`},
-        {"pid": `36`, "q": `ja`, "p": `じゃ`},
+        {"pid": `12`, "q": `za`, "p": `ざ`},
+        {"pid": `13`, "q": `da`, "p": `だ`},
+        {"pid": `14`, "q": `ba`, "p": `ば`},
+        {"pid": `15`, "q": `pa`, "p": `ぱ`},
+        {"pid": `16`, "q": `i`, "p": `い`},
+        {"pid": `17`, "q": `ki`, "p": `き`},
+        {"pid": `18`, "q": `si`, "p": `し`},
+        {"pid": `19`, "q": `ti`, "p": `ち`},
+        {"pid": `20`, "q": `ni`, "p": `に`},
+        {"pid": `21`, "q": `hi`, "p": `ひ`},
+        {"pid": `22`, "q": `mi`, "p": `み`},
+        {"pid": `24`, "q": `ri`, "p": `り`},
+        {"pid": `25`, "q": `wi`, "p": `ゐ`},
+        {"pid": `26`, "q": `gi`, "p": `ぎ`},
+        {"pid": `27`, "q": `zi`, "p": `じ`},
+        {"pid": `28`, "q": `di`, "p": `ぢ`},
+        {"pid": `29`, "q": `bi`, "p": `び`},
+        {"pid": `30`, "q": `pi`, "p": `ぴ`},
+        {"pid": `31`, "q": `u`, "p": `う`},
+        {"pid": `32`, "q": `ku`, "p": `く`},
+        {"pid": `33`, "q": `su`, "p": `す`},
+        {"pid": `34`, "q": `tu`, "p": `つ`},
+        {"pid": `35`, "q": `nu`, "p": `ぬ`},
+        {"pid": `36`, "q": `hu`, "p": `ふ`},
+        {"pid": `37`, "q": `mu`, "p": `む`},
+        {"pid": `38`, "q": `yu`, "p": `ゆ`},
+        {"pid": `39`, "q": `ru`, "p": `る`},
+        {"pid": `41`, "q": `gu`, "p": `ぐ`},
+        {"pid": `42`, "q": `zu`, "p": `ず`},
+        {"pid": `43`, "q": `du`, "p": `づ`},
+        {"pid": `44`, "q": `bu`, "p": `ぶ`},
+        {"pid": `45`, "q": `pu`, "p": `ぷ`},
+        {"pid": `46`, "q": `e`, "p": `え`},
+        {"pid": `47`, "q": `ke`, "p": `け`},
+        {"pid": `48`, "q": `se`, "p": `せ`},
+        {"pid": `49`, "q": `te`, "p": `て`},
+        {"pid": `50`, "q": `ne`, "p": `ね`},
+        {"pid": `51`, "q": `he`, "p": `へ`},
+        {"pid": `52`, "q": `me`, "p": `め`},
+        {"pid": `53`, "q": `ye`, "p": `𛀁`},
+        {"pid": `54`, "q": `re`, "p": `れ`},
+        {"pid": `55`, "q": `we`, "p": `ゑ`},
+        {"pid": `56`, "q": `ge`, "p": `げ`},
+        {"pid": `57`, "q": `ze`, "p": `ぜ`},
+        {"pid": `58`, "q": `de`, "p": `で`},
+        {"pid": `59`, "q": `be`, "p": `べ`},
+        {"pid": `60`, "q": `pe`, "p": `ぺ`},
+        {"pid": `61`, "q": `o`, "p": `お`},
+        {"pid": `62`, "q": `ko`, "p": `こ`},
+        {"pid": `63`, "q": `so`, "p": `そ`},
+        {"pid": `64`, "q": `to`, "p": `と`},
+        {"pid": `65`, "q": `no`, "p": `の`},
+        {"pid": `66`, "q": `ho`, "p": `ほ`},
+        {"pid": `67`, "q": `mo`, "p": `も`},
+        {"pid": `68`, "q": `yo`, "p": `よ`},
+        {"pid": `69`, "q": `ro`, "p": `ろ`},
+        {"pid": `70`, "q": `wo`, "p": `を`},
+        {"pid": `71`, "q": `go`, "p": `ご`},
+        {"pid": `72`, "q": `zo`, "p": `ぞ`},
+        {"pid": `73`, "q": `do`, "p": `ど`},
+        {"pid": `74`, "q": `bo`, "p": `ぼ`},
+        {"pid": `75`, "q": `po`, "p": `ぽ`},
+
+        // {"pid": `78`, "q": `cha / tya`, "p": `ちゃ`},
+        // {"pid": `77`, "q": `sha / sya`, "p": `しゃ`},
+        // {"pid": `84`, "q": `ja / zya`, "p": `じゃ`},
+        // {"pid": `94`, "q": `ryu`, "p": `りゅ`},
+        
+
+        {"pid": `76`, "q": `kya`, "p": `きゃ`},
+        {"pid": `77`, "q": `sya`, "p": `しゃ`},
+        {"pid": `78`, "q": `tya`, "p": `ちゃ`},
+        {"pid": `79`, "q": `nya`, "p": `にゃ`},
+        {"pid": `80`, "q": `hya`, "p": `ひゃ`},
+        {"pid": `81`, "q": `mya`, "p": `みゃ`},
+        {"pid": `82`, "q": `rya`, "p": `りゃ`},
+        {"pid": `83`, "q": `gya`, "p": `ぎゃ`},
+        {"pid": `84`, "q": `zya`, "p": `じゃ`},
+        {"pid": `85`, "q": `dya`, "p": `ぢゃ`},
+        {"pid": `86`, "q": `bya`, "p": `びゃ`},
+        {"pid": `87`, "q": `pya`, "p": `ぴゃ`},
+        {"pid": `88`, "q": `kyu`, "p": `きゅ`},
+        {"pid": `89`, "q": `syu`, "p": `しゅ`},
+        {"pid": `90`, "q": `tyu`, "p": `ちゅ`},
+        {"pid": `91`, "q": `nyu`, "p": `にゅ`},
+        {"pid": `92`, "q": `hyu`, "p": `ひゅ`},
+        {"pid": `93`, "q": `myu`, "p": `みゅ`},
+        {"pid": `94`, "q": `ryu`, "p": `りゅ`},
+        {"pid": `95`, "q": `gyu`, "p": `ぎゅ`},
+        {"pid": `96`, "q": `zyu`, "p": `じゅ`},
+        {"pid": `97`, "q": `dyu`, "p": `ぢゅ`},
+        {"pid": `98`, "q": `byu`, "p": `びゅ`},
+        {"pid": `99`, "q": `pyu`, "p": `ぴゅ`},
+        {"pid": `100`, "q": `kyo`, "p": `きょ`},
+        {"pid": `101`, "q": `syo`, "p": `しょ`},
+        {"pid": `102`, "q": `tyo`, "p": `ちょ`},
+        {"pid": `103`, "q": `nyo`, "p": `にょ`},
+        {"pid": `104`, "q": `hyo`, "p": `ひょ`},
+        {"pid": `105`, "q": `myo`, "p": `みょ`},
+        {"pid": `106`, "q": `ryo`, "p": `りょ`},
+        {"pid": `107`, "q": `gyo`, "p": `ぎょ`},
+        {"pid": `108`, "q": `zyo`, "p": `じょ`},
+        {"pid": `109`, "q": `dyo`, "p": `ぢょ`},
+        {"pid": `110`, "q": `byo`, "p": `びょ`},
+        {"pid": `111`, "q": `pyo`, "p": `ぴょ`},
+
+        {"pid": `112`, "q": `kko`, "p": `つこ`},
     ],
     "template": [
         // {"pid": `0`, "q": `9 + 2`, "p": `11`},
@@ -375,8 +495,10 @@ var settings = {
     "deck": "hiragana",
     // "deck": "css--background-color",
     // "deck": "opp",
-    "n-of-pairs": 8,
-    "deck-size": 16,
+    // "n-of-pairs": 8,
+    // "deck-size": 16,
+    "n-of-pairs": 20,
+    "deck-size": 40,
 }
 
 window.addEventListener('load', (ev) => {

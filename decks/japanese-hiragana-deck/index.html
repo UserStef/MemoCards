@@ -23,12 +23,24 @@
             --card-color-1: hsla(0, 80%, 25%, 1);
             --card-color-2: hsla(0, 80%, 15%, 1);
             --card-bg-02: radial-gradient(circle at 50% 50%, #700 50%, #0000 50%) 10px 10px / 100px 100px no-repeat, linear-gradient(135deg, #fff5 50%, #0002 50%), #aaa;
+            --card-bg-02: radial-gradient(circle at 50% 50%, #700 50%, #0000 50%) 5px 5px / 70px 70px no-repeat, linear-gradient(135deg, #fff5 50%, #0002 50%), #aaa;
+        }
+        main {margin-top: 8vmin;}
+        .board {grid-template-columns: repeat(4, 1fr);}
+        .card {
+            height: 100px; width: 100px;
+            height: 60px; width: 60px;
+            height: 70px; width: 70px;
+            margin: 4px;
+            height: 80px; width: 80px;
+            margin: 8px;
+            font-size: 32px;
         }
         .card::before {
             background: var(--card-bg-02);
         }
-        .card-p {font-size: 32px;}
-        .card-q {font-size: 32px;}
+        /* .card-p {font-size: 32px;}
+        .card-q {font-size: 32px;} */
 
         /* .board::after {content: "🎊 ¡Ganaste! ㊗ 🎉"; } */
     </style>
@@ -375,8 +387,8 @@ var settings = {
     "deck": "hiragana",
     // "deck": "css--background-color",
     // "deck": "opp",
-    "n-of-pairs": 8,
-    "deck-size": 16,
+    "n-of-pairs": 10,
+    "deck-size": 20,
 }
 
 window.addEventListener('load', (ev) => {

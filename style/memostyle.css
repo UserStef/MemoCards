@@ -37,7 +37,7 @@ main > * {
 .deck-list a:nth-child(3) .deck {--card-bg: repeating-conic-gradient(var(--card-color-1) 0deg 45deg,var(--card-color-2) 45deg 90deg) top left / 3rem 3rem;}
 .deck-list a:nth-child(4) .deck {--card-bg: repeating-conic-gradient(from 180deg, var(--card-color-1) 0deg 90deg, #0000 90deg 360deg) 12px 16px / 2.6rem 3rem, repeating-conic-gradient(var(--card-color-1) 0deg 90deg, var(--card-color-2) 90deg 360deg) top left / 2.6rem 3rem;}
 .deck-list a:nth-child(5) .deck {--card-bg: repeating-conic-gradient(from 135deg,var(--card-color-1) 0deg 90deg,#0000 90deg 360deg) 20px 0px / 2.6rem 3rem,repeating-conic-gradient(from -45deg,var(--card-color-1) 0deg 90deg, var(--card-color-2) 90deg 360deg) top left / 2.6rem 3rem;}
-.deck-list a:nth-child(6) .deck {--card-bg: radial-gradient(circle at 50% 50%, #700 50%, #0000 50%) 25px 70px / 100px 100px no-repeat, linear-gradient(135deg, #fff5 50%, #0002 50%), #aaa;}
+.deck-list a:nth-child(6) .deck {--card-bg: radial-gradient(circle at 50% 50%, #700 50%, #0000 50%) 0px 50px / 140px 140px no-repeat, linear-gradient(135deg, #fff5 50%, #0002 50%), #aaa;}
 .deck {
     --hue: 210;
     --card-color-1: hsla(var(--hue), 80%, 25%, 1);

@@ -119,6 +119,9 @@ footer .my-name {
     left: 0px;
     padding: 9px;
 }
+footer .my-name a {
+    display: none;
+}
 
 .hidden {
     display: none!important; 
